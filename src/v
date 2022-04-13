@@ -1,0 +1,2 @@
+g++ -Wall -std=c++2a -march=native main.cpp includes/lexer.cpp -o main
+valgrind --leak-check=yes -s ./main

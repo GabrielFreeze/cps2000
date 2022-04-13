@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -18,16 +19,29 @@ enum token_type {TOK_OPEN_BRACKET, TOK_CLOSE_BRACKET,
             TOK_SEMICOLON, TOK_COLON, TOK_COMMA,
             TOK_EQUAL, TOK_NUM, TOK_CONST, TOK_MULOP,
             TOK_ADDOP, TOK_RELOP, TOK_ARROW, TOK_COMMENT,
-            TOK_ID}; //TOK_ID encapsulates identifiers and keywords. Distinction is made in the Parser.
+            TOK_ID, TOK_FOR, TOK_WHILE, TOK_IF, TOK_ELSE, TOK_LET, TOK_PRINT, TOK_RETURN, TOK_FN,
+            TOK_TRUE, TOK_FALSE, TOK_AND, TOK_OR, TOK_NOT, TOK_FLOAT, TOK_INT, TOK_BOOL, TOK_CHAR};
 
-#define STATE_SIZE 31
+#define STATE_SIZE 32
 enum state {S_START, S_A, S_B, S_C, S_D, S_E, S_F, S_G, S_EMPTY, S_ID,
             S_OPEN_BRACKET, S_CLOSE_BRACKET, S_OPEN_CURLY, S_CLOSE_CURLY,
-            S_SEMICOLON, S_COLON, S_COMMA, S_EQUAL, S_NUM_B, S_NUM_A, S_CONST,
+            S_SEMICOLON, S_COLON, S_COMMA, S_EQUAL, S_NUM_A, S_NUM_B, S_CONST,
             S_MULOP_A, S_MULOP_B,
             S_ADDOP_A, S_ADDOP_B,
             S_RELOP_A, S_RELOP_B, S_RELOP_C,
             S_ARROW, S_COMMENT_A, S_COMMENT_B};
+
+
+
+#define ANSI_BLK "\e[0;30m"
+#define ANSI_RED "\e[0;31m"
+#define ANSI_GRN "\e[0;32m"
+#define ANSI_YEL "\e[0;33m"
+#define ANSI_BLU "\e[0;34m"
+#define ANSI_MAG "\e[0;35m"
+#define ANSI_CYN "\e[0;36m"
+#define ANSI_WHT "\e[0;37m"
+#define ANSI_ESC "\e[0m"
 
 
 
@@ -52,10 +66,13 @@ class Lexer {
         vector<Token> get_tokens(string input_text);
         token_type state_to_token_type(state s);
         state next_state(state s, transition t);
-        void printToken(Token token);
+
+        void printToken(vector<Token> tokens, bool nl = false);
+        token_type id_to_keyword(string lexeme);
 
         vector<vector<state>> dfa;
         vector<string> keywords;
+        vector<token_type> keyword_types;
         vector<state> final;
 
         state start, empty, last_final, current_state;
