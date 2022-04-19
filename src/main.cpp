@@ -5,6 +5,38 @@
 
 using namespace std;
 
+string file_to_string(const string& path);
+void print_program(string& text);
+
+
+int main() {
+
+
+    Lexer lexer;
+
+    string line;
+    string filename = "programs/program_04.rs";
+
+    
+    string text;
+    text = file_to_string(filename);
+
+    print_program(text);
+   
+    
+
+
+    vector<Token> tokens = lexer.get_tokens(text);
+
+    lexer.printToken(tokens);
+    
+    cout << '\n';
+    
+
+    return 0;
+}
+
+
 string file_to_string(const string& path) {
     
     ifstream f(path);
@@ -18,21 +50,7 @@ string file_to_string(const string& path) {
     return text;
 }
 
-
-
-
-int main() {
-
-
-    Lexer lexer;
-
-    string line;
-    string filename = "programs/program_03.rs";
-
-    
-    string text;
-    text = file_to_string(filename);
-
+void print_program(string& text) {
     int nl_counter = 0;
     cout << ANSI_MAG << nl_counter++<<": " << ANSI_ESC;
     for (char& c : text) {
@@ -44,15 +62,5 @@ int main() {
         
     }
     cout << ANSI_ESC << "\n\n";
-    
 
-
-    vector<Token> tokens = lexer.get_tokens(text);
-
-    lexer.printToken(tokens);
-    
-    cout << '\n';
-    
-
-    return 0;
 }
