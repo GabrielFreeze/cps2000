@@ -48,17 +48,37 @@ bool Parser::parseProgram() {
 
 bool Parser::parseStmt() {
     
-    Token tok = consNextToken();
+    token_type nextToken = peekNextToken().type;
 
-    bool expr = (parseVarDecl()   && tok.type == TOK_SEMICOLON) ||
-                (parseAssign()    && tok.type == TOK_SEMICOLON) ||
-                (parsePrintStmt() && tok.type == TOK_SEMICOLON) ||
-                (parseIfStmt()                                ) ||
-                (parseForStmt()                               ) ||
-                (parseWhileStmt()                             ) ||
-                (parseReturnStmt()                            ) ||
-                (parseFuncDecl()                              ) ||
-                (parseBlock()                                 );
+    bool expr = ((nextToken == TOK_LET                  ) &&
+                 (parseVarDecl()                        ) &&
+                 (consNextToken().type == TOK_SEMICOLON)) ||
+
+                ((nextToken == TOK_ID                   ) &&
+                 (parseAssign()                         ) &&
+                 (consNextToken().type == TOK_SEMICOLON)) ||
+                
+                ((nextToken == TOK_PRINT                ) &&
+                 (parsePrintStmt()                      ) &&
+                 (consNextToken().type == TOK_SEMICOLON)) ||
+
+                ((nextToken == TOK_IF                   ) &&
+                 (parseIfStmt()                        )) ||
+
+                ((nextToken == TOK_FOR                  ) &&
+                 (parseForStmt()                       )) ||
+
+                ((nextToken == TOK_WHILE                ) &&
+                 (parseWhileStmt()                     )) ||
+
+                ((nextToken == TOK_RETURN               ) &&
+                 (parseReturnStmt()                    )) ||
+
+                ((nextToken == TOK_FN                   ) &&
+                 (parseFuncDecl()                      )) ||
+
+                ((nextToken == TOK_OPEN_CURLY           ) &&
+                 (parseBlock()                         ));
 
     return expr;
 }
@@ -250,7 +270,7 @@ bool Parser::parseTerm() {
     return true;
 }
 bool Parser::parseFactor() {
-    
+//todo:!
 }
 bool Parser::parseMulOp() {
  
