@@ -34,8 +34,8 @@ Lexer::Lexer() {
     keywords = {"for", "while", "if", "else", "let", "print", "return", "fn",
                 "true", "false", "and", "or", "not", "float", "int", "bool","char"};
     
-    keyword_types = {TOK_FOR, TOK_WHILE, TOK_IF, TOK_ELSE, TOK_LET, TOK_PRINT, TOK_RETURN, TOK_FN, TOK_TRUE, TOK_FALSE,
-                     TOK_AND, TOK_OR, TOK_NOT, TOK_FLOAT, TOK_INT, TOK_BOOL, TOK_CHAR};
+    keyword_types = {TOK_FOR, TOK_WHILE, TOK_IF, TOK_ELSE, TOK_LET, TOK_PRINT, TOK_RETURN, TOK_FN,
+                     TOK_BOOL_LIT, TOK_BOOL_LIT,TOK_MULOP, TOK_ADDOP, TOK_UNOP, TOK_FLOAT, TOK_INT, TOK_BOOL, TOK_CHAR};
 
 
     //Assert
@@ -159,12 +159,12 @@ token_type Lexer::state_to_token_type(state s) {
 void Lexer::printToken(vector<Token> tokens) { 
     
     vector<string> labels = {"OPEN_BRACKET", "CLOSE_BRACKET",
-        "OPEN_CURLY", "CLOSE_CURLY",
-        "SEMICOLON", "COLON", "COMMA",
-        "EQUAL", "NUM", "CONST", "MULOP",
-        "ADDOP", "RELOP", "ARROW", "COMMENT",
-        "ID","FOR", "WHILE", "IF", "ELSE", "LET", "PRINT", "RETURN", "FN",
-        "TRUE", "FALSE", "AND", "OR", "NOT", "FLOAT", "INT", "BOOL", "CHAR"};
+                            "OPEN_CURLY", "CLOSE_CURLY",
+                            "SEMICOLON", "COLON", "COMMA",
+                            "EQUAL", "NUM", "CONST", "MULOP",
+                            "UNOP","ADDOP", "RELOP", "ARROW", "COMMENT", "BOOL_LIT",
+                            "ID","FOR", "WHILE", "IF", "ELSE", "LET", "PRINT", "RETURN", "FN",
+                            "FLOAT", "INT", "BOOL", "CHAR"};
     
     int prev_nl = 0;    
     
