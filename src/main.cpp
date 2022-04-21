@@ -15,9 +15,8 @@ int main() {
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_04.rs";
+    string filename = "programs/program_03.rs";
 
-    
     string text;
     text = file_to_string(filename);
 
@@ -26,7 +25,7 @@ int main() {
     
 
 
-    vector<Token> tokens = lexer.get_tokens(text);
+    vector<Token> tokens = lexer.getTokens(text);
 
     lexer.printToken(tokens);
     

@@ -64,7 +64,7 @@ Lexer::Lexer() {
    
 }
 
-transition Lexer::get_transition(char x) {
+transition Lexer::getTransition(char x) {
     
     switch (x) {
 
@@ -115,7 +115,7 @@ token_type Lexer::id_to_keyword(string lexeme) {
     return TOK_ID;
 }
 
-state Lexer::next_state(state s, transition t) {
+state Lexer::nextState(state s, transition t) {
     return dfa[t][s];
 }
 
@@ -156,7 +156,7 @@ token_type Lexer::state_to_token_type(state s) {
     }
 }
 
-void Lexer::printToken(vector<Token> tokens, bool nl) { 
+void Lexer::printToken(vector<Token> tokens) { 
     
     vector<string> labels = {"OPEN_BRACKET", "CLOSE_BRACKET",
         "OPEN_CURLY", "CLOSE_CURLY",
@@ -166,16 +166,19 @@ void Lexer::printToken(vector<Token> tokens, bool nl) {
         "ID","FOR", "WHILE", "IF", "ELSE", "LET", "PRINT", "RETURN", "FN",
         "TRUE", "FALSE", "AND", "OR", "NOT", "FLOAT", "INT", "BOOL", "CHAR"};
     
+    int prev_nl = 0;    
     
     for (int i = 0; i < tokens.size(); i++) {
         Token token = tokens[i];
 
-
+        if (token.ln > prev_nl) {
+            cout << '\n';
+            prev_nl = token.ln;
+        }
+        
         cout << "[" << ANSI_YEL << labels[token.type] << ANSI_ESC << ", " << ANSI_GRN <<token.lexeme << ANSI_ESC << "]";
 
-        if (nl) cout << '\n';
-        else if (i%3 == 0) cout << '\n';
-        else cout << '\t';
+
 
     }
 
@@ -184,7 +187,7 @@ void Lexer::printToken(vector<Token> tokens, bool nl) {
     
 }
 
-vector<Token> Lexer::get_tokens(string input_text) {
+vector<Token> Lexer::getTokens(string input_text) {
     
     vector<Token> tokens;
     string current_lexeme = "";
@@ -209,14 +212,14 @@ vector<Token> Lexer::get_tokens(string input_text) {
 
 
         //Get the transition corresponding to c.
-        if ((t = get_transition(c)) == TRANS_EMPTY) {
+        if ((t = getTransition(c)) == TRANS_EMPTY) {
             cerr << "Invalid character" << c << "supplied to get_transition()" << '\n';
             exit(EXIT_FAILURE);
         }
             
         //Get next state.
         
-        current_state = next_state(current_state, t);
+        current_state = nextState(current_state, t);
 
         //If after taking a transition the current state is the starting state or is the empty state, then don't consume the character as it is a whitespace character.
         if (current_state != start && current_state != empty) {
@@ -263,7 +266,7 @@ vector<Token> Lexer::get_tokens(string input_text) {
             }
           
 
-            Token token = {type,current_lexeme};
+            Token token = {type,current_lexeme, nl_counter, char_counter};
 
             
             tokens.push_back(token);
