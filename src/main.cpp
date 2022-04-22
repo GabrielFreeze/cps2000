@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "includes/lexer.hpp"
+#include "includes/parser.hpp"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ int main() {
 
 
     Lexer lexer;
+    
 
     string line;
     string filename = "programs/program_03.rs";
@@ -27,9 +29,16 @@ int main() {
 
     vector<Token> tokens = lexer.getTokens(text);
 
+    Parser parser(tokens);
+
+
     lexer.printToken(tokens);
-    
     cout << '\n';
+
+    
+    if (parser.parseProgram())
+        cout << "OK\n";
+        
     
 
     return 0;

@@ -1,14 +1,20 @@
 #include "parser.hpp"
 
-Parser::Parser(vector<Token> tokens) {
+
+Parser::Parser(vector<Token>& tokens) {
     current_ASTNode = AST_PROGRAM; //The starting node.
     this->tokens = tokens; //Pass all tokens to the parser before parsing begins.
     tokens_length = tokens.size();
+    next_token_index = 0;
 }
 
 void Parser::printError() {
-    //TODO: Pretty print this.
-    cout << "Syntax error on token " << getCurrentToken().lexeme << '\n';
+    
+    Token tok = getCurrentToken();
+
+    cout << ANSI_RED << "Syntax Error: " << ANSI_ESC << ANSI_YEL << tok.lexeme << ANSI_ESC << ANSI_RED << " [" << ANSI_ESC << ANSI_YEL
+    << tok.ln << ANSI_ESC << ANSI_RED << ',' << ANSI_ESC << ANSI_YEL << tok.col
+    << ANSI_ESC << ANSI_RED "]"  << ANSI_ESC << '\n';
 }
 
 Token Parser::consNextToken() {
@@ -19,6 +25,7 @@ Token Parser::consNextToken() {
     return empty_token;
 }
 Token Parser::peekNextToken() {
+    
     if (next_token_index < tokens_length)
         return tokens[next_token_index];
     
@@ -35,6 +42,10 @@ Token Parser::getCurrentToken() {
 
 bool Parser::parseProgram() {
 
+    // Remove all comment tokens.
+    tokens.erase(remove_if(tokens.begin(), tokens.end(), [](const Token& tok) { return tok.type == TOK_COMMENT;}), tokens.end());
+    tokens_length = tokens.size();
+
     while (peekNextToken().type != TOK_EMPTY) {
         
         if (!parseStmt()) {
@@ -43,50 +54,52 @@ bool Parser::parseProgram() {
         }
     }
 
+
     return true;
 }
 
 bool Parser::parseStmt() {
     
-    token_type nextToken = peekNextToken().type;
+    Token tok = peekNextToken();
 
-    bool expr = ((nextToken == TOK_LET                  ) &&
+    bool expr = ((tok.type == TOK_LET                   ) &&
                  (parseVarDecl()                        ) &&
                  (consNextToken().type == TOK_SEMICOLON)) ||
 
-                ((nextToken == TOK_ID                   ) &&
+                ((tok.type == TOK_ID                    ) &&
                  (parseAssign()                         ) &&
                  (consNextToken().type == TOK_SEMICOLON)) ||
                 
-                ((nextToken == TOK_PRINT                ) &&
+                ((tok.type == TOK_PRINT                 ) &&
                  (parsePrintStmt()                      ) &&
                  (consNextToken().type == TOK_SEMICOLON)) ||
 
-                ((nextToken == TOK_IF                   ) &&
+                ((tok.type == TOK_IF                    ) &&
                  (parseIfStmt()                        )) ||
 
-                ((nextToken == TOK_FOR                  ) &&
+                ((tok.type == TOK_FOR                   ) &&
                  (parseForStmt()                       )) ||
 
-                ((nextToken == TOK_WHILE                ) &&
+                ((tok.type == TOK_WHILE                 ) &&
                  (parseWhileStmt()                     )) ||
 
-                ((nextToken == TOK_RETURN               ) &&
-                 (parseReturnStmt()                    )) ||
+                ((tok.type == TOK_RETURN                ) &&
+                 (parseReturnStmt()                     ) &&
+                 (consNextToken().type == TOK_SEMICOLON)) ||
 
-                ((nextToken == TOK_FN                   ) &&
+                ((tok.type == TOK_FN                    ) &&
                  (parseFuncDecl()                      )) ||
 
-                ((nextToken == TOK_OPEN_CURLY           ) &&
+                ((tok.type == TOK_OPEN_CURLY            ) &&
                  (parseBlock()                         ));
-
+    
     return expr;
 }
 bool Parser::parseVarDecl() {
     
     bool expr = (consNextToken().type == TOK_LET      ) &&
                 (parseIdentifier()                    ) &&
-                (consNextToken().type == TOK_SEMICOLON) &&
+                (consNextToken().type == TOK_COLON) &&
                 (parseType()                          ) &&
                 (consNextToken().type == TOK_EQUAL    ) &&
                 (parseExpr()                          );
@@ -264,14 +277,15 @@ bool Parser::parseBlock() {
 
 
     while (peekNextToken().type != TOK_CLOSE_CURLY) {
-        if (!parseBlock()) {
+        if (!parseStmt()) {
             return false;
         }
     }
-
+    
     if (consNextToken().type != TOK_CLOSE_CURLY)
         return false;
     
+    // if (!expr) cout << 'F';
     return true;
     
 }
