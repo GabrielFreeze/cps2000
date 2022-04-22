@@ -1,6 +1,6 @@
 /* Initalising Variable */ let x : float = 10; /*Variable Initalised*/
 
-let boolean_variable : bool = not (true and false); /*Variable Initalised*/
+let t : char = '2'; /*Variable Initalised*/
 
 while (x < y) {
     x = x + 1.3;

@@ -3,9 +3,9 @@
 
 Lexer::Lexer() {
 
-    //TRANSITIONSxSTATES:         START           A         B         C         D           E            F          EMPTY       ID     OPEN_BRACKET  CLOSE_BRACKET  OPEN_CURLY  CLOSE_CURLY   SEMICOLON   COLON     COMMA      EQUAL        NUM_A       NUM_B      CONST   MULOP_A       MULOP_B      ADDOP_A    ADDOP_B    RELOP_A     RELOP_B    RELOP_C     ARROW      COMMENT_A     COMMENT_B
+    //TRANSITIONSxSTATES:         START           A         B         C         D           E            F          EMPTY       ID     OPEN_BRACKET  CLOSE_BRACKET  OPEN_CURLY  CLOSE_CURLY   SEMICOLON   COLON     COMMA      EQUAL         INT       FLOAT      CHAR    MULOP_A       MULOP_B      ADDOP_A    ADDOP_B    RELOP_A     RELOP_B    RELOP_C     ARROW      COMMENT_A     COMMENT_B
     dfa =/*LETTER       :*/ {{S_ID           , S_B    ,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_ID   ,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*LETTER       */
-         /*DIGIT        :*/  {S_NUM_A        , S_B    ,  S_EMPTY,  S_NUM_B,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_ID   ,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_NUM_A,   S_NUM_B,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*DIGIT        */
+         /*DIGIT        :*/  {S_INT          , S_B    ,  S_EMPTY,  S_FLOAT,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_ID   ,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_INT  ,   S_FLOAT,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*DIGIT        */
          /*ASCII_OTHER  :*/  {S_EMPTY        , S_B    ,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*ASCII_OTHER  */
          /*OPEN_BRACKET :*/  {S_OPEN_BRACKET , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*OPEN_BRACKET */
          /*CLOSE_BRACKET:*/  {S_CLOSE_BRACKET, S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*CLOSE_BRACKET*/
@@ -14,7 +14,7 @@ Lexer::Lexer() {
          /*SEMICOLON    :*/  {S_SEMICOLON    , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*SEMICOLON    */
          /*COLON        :*/  {S_COLON        , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*COLON        */
          /*COMMA        :*/  {S_COMMA        , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*COMMA        */
-         /*QUOTE        :*/  {S_A            , S_EMPTY,  S_CONST,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*QUOTE        */
+         /*QUOTE        :*/  {S_A            , S_EMPTY,  S_CHAR_LIT,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*QUOTE        */
          /*EQUAL        :*/  {S_EQUAL        , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_RELOP_C,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_RELOP_C,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_RELOP_B,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*EQUAL        */
          /*PERIOD       :*/  {S_EMPTY        , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_C    ,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*PERIOD       */
          /*BANG!        :*/  {S_F            , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*BANG!        */
@@ -28,7 +28,7 @@ Lexer::Lexer() {
          /*TAB          :*/  {S_START        , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}, /*TAB          */
          /*NEWLINE      :*/  {S_START        , S_EMPTY,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY    ,    S_EMPTY}, /*NEWLINE      */
          /*SPACE        :*/  {S_START        , S_B    ,  S_EMPTY,  S_EMPTY,  S_D     ,     S_D     ,  S_EMPTY  ,   S_EMPTY,   S_EMPTY,    S_EMPTY,       S_EMPTY,     S_EMPTY,    S_EMPTY,     S_EMPTY,  S_EMPTY,  S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY, S_EMPTY    ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_EMPTY  ,   S_EMPTY,   S_EMPTY,   S_EMPTY,   S_COMMENT_A,    S_EMPTY}};/*SPACE        */
-    //TRANSITIONSxSTATES:         START           A         B         C         D           E            F          EMPTY       ID     OPEN_BRACKET  CLOSE_BRACKET  OPEN_CURLY  CLOSE_CURLY   SEMICOLON   COLON     COMMA      EQUAL        NUM_A       NUM_B      CONST   MULOP_A       MULOP_B      ADDOP_A    ADDOP_B    RELOP_A     RELOP_B    RELOP_C     ARROW      COMMENT_A     COMMENT_B     
+    //TRANSITIONSxSTATES:         START           A         B         C         D           E            F          EMPTY       ID     OPEN_BRACKET  CLOSE_BRACKET  OPEN_CURLY  CLOSE_CURLY   SEMICOLON   COLON     COMMA      EQUAL        INT        FLOAT      CHAR    MULOP_A       MULOP_B      ADDOP_A    ADDOP_B    RELOP_A     RELOP_B    RELOP_C     ARROW      COMMENT_A     COMMENT_B     
 
 
     keywords = {"for", "while", "if", "else", "let", "print", "return", "fn",
@@ -48,7 +48,7 @@ Lexer::Lexer() {
 
     final = {S_ID,
             S_OPEN_BRACKET, S_CLOSE_BRACKET, S_OPEN_CURLY, S_CLOSE_CURLY,
-            S_SEMICOLON, S_COLON, S_COMMA, S_EQUAL, S_NUM_A, S_NUM_B, S_CONST,
+            S_SEMICOLON, S_COLON, S_COMMA, S_EQUAL, S_INT, S_FLOAT, S_CHAR_LIT,
             S_MULOP_A, S_MULOP_B,
             S_ADDOP_A, S_ADDOP_B,
             S_RELOP_A, S_RELOP_B, S_RELOP_C,
@@ -135,9 +135,9 @@ token_type Lexer::state_to_token_type(state s) {
         case S_COLON:         return TOK_COLON;
         case S_COMMA:         return TOK_COMMA;
         case S_EQUAL:         return TOK_EQUAL;
-        case S_NUM_B:         return TOK_NUM;
-        case S_NUM_A:         return TOK_NUM;
-        case S_CONST:         return TOK_CONST;
+        case S_FLOAT:         return TOK_FLOAT_LIT;
+        case S_INT:           return TOK_INT_LIT;
+        case S_CHAR_LIT:         return TOK_CHAR_LIT;
         case S_MULOP_A:       return TOK_MULOP;
         case S_MULOP_B:       return TOK_MULOP;
         case S_ADDOP_A:       return TOK_ADDOP;
@@ -161,7 +161,7 @@ void Lexer::printToken(vector<Token> tokens) {
     vector<string> labels = {"OPEN_BRACKET", "CLOSE_BRACKET",
                             "OPEN_CURLY", "CLOSE_CURLY",
                             "SEMICOLON", "COLON", "COMMA",
-                            "EQUAL", "NUM", "CONST", "MULOP",
+                            "EQUAL", "INT_LIT", "FLOAT_LIT", "CHAR_LIT", "MULOP",
                             "UNOP","ADDOP", "RELOP", "ARROW", "COMMENT", "BOOL_LIT",
                             "ID","FOR", "WHILE", "IF", "ELSE", "LET", "PRINT", "RETURN", "FN",
                             "FLOAT", "INT", "BOOL", "CHAR"};

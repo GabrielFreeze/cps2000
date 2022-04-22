@@ -190,6 +190,7 @@ bool Parser::parseReturnStmt() {
     
     return expr;
 }
+
 bool Parser::parseFuncDecl() {
 
     bool expr = (consNextToken().type == TOK_FN           ) &&
@@ -206,6 +207,56 @@ bool Parser::parseFuncDecl() {
 
     return expr;
 }
+bool Parser::parseFuncCall() {
+
+    if (!(parseIdentifier() && consNextToken().type == TOK_OPEN_BRACKET)) {
+        return false;
+    }
+
+    
+    while (peekNextToken().type == TOK_COMMA) {
+        if (!(consNextToken().type == TOK_COMMA && parseExpr())) {
+            return false;
+        }
+    }  
+
+    return true;
+}
+bool Parser::parseFormalParams() {
+
+    if (!parseFormalParam())
+        return false;
+    
+    while (peekNextToken().type == TOK_COMMA) {
+        if (!(consNextToken().type == TOK_COMMA && parseFormalParam())) {
+            return false;
+        }
+    }
+
+    return true;
+}
+bool Parser::parseActualParams() {
+    
+    if (!parseExpr())
+        return false;
+
+    while (peekNextToken().type == TOK_COMMA) {
+        if (!(consNextToken().type == TOK_COMMA && parseExpr())) {
+            return false;
+        }
+    }
+
+    return true;
+}
+bool Parser::parseFormalParam() {
+    
+    bool expr = (parseIdentifier()                ) &&
+                (consNextToken().type == TOK_COLON) &&
+                (parseType()                      );
+    
+    return expr;
+}
+
 bool Parser::parseBlock() {
 
     if (consNextToken().type != TOK_OPEN_CURLY)
@@ -230,9 +281,10 @@ bool Parser::parseIdentifier() {
 
     return expr;
 }
+
 bool Parser::parseExpr() {
 
-    if (parseSimpleExpr())
+    if (!parseSimpleExpr())
         return false;
 
     while (peekNextToken().type == TOK_RELOP) {
@@ -256,6 +308,15 @@ bool Parser::parseSimpleExpr() {
 
     return true;
 }
+bool Parser::parseSubExpr() {
+
+    bool expr = (consNextToken().type == TOK_OPEN_BRACKET ) &&
+                (parseExpr()                              ) &&
+                (consNextToken().type == TOK_CLOSE_BRACKET);
+
+    return expr;
+}
+
 bool Parser::parseTerm() {
 
     if (!parseFactor())
@@ -270,11 +331,77 @@ bool Parser::parseTerm() {
     return true;
 }
 bool Parser::parseFactor() {
-//todo:!
+    size_t this_token_index = next_token_index;
+
+    /*Attempt to match with Literal, Identifier, FunctionCall, SubExpr or Unary.
+    Another approach was to check the next token, but it would be too long since
+    literal expands to 4 more non-terminals */
+    if (parseLit()) return true;
+    next_token_index = this_token_index;
+
+    if (parseIdentifier()) return true;
+    next_token_index = this_token_index;
+
+    if (parseFuncCall()) return true;
+    next_token_index = this_token_index;
+
+    if (parseSubExpr()) return true;
+    next_token_index = this_token_index;
+
+    if (parseUnOp()) return true;
+    next_token_index = this_token_index;
+
+    return false;
+
 }
 bool Parser::parseMulOp() {
  
     bool expr = (consNextToken().type == TOK_MULOP);
+
+    return expr;
+}
+bool Parser::parseAddOp() {
+    
+    bool expr = (consNextToken().type == TOK_ADDOP);
+
+    return expr;
+}
+bool Parser::parseUnOp() {
+
+    Token tok = consNextToken();
+
+    bool expr = ((tok.type == TOK_ADDOP && tok.lexeme == "-") ||
+                 (tok.type == TOK_UNOP                     )) &&
+                 (parseExpr()                              );
+
+    return expr;   
+}
+bool Parser::parseRelOp() {
+
+    bool expr = (consNextToken().type == TOK_RELOP);
+
+    return expr;
+}
+
+bool Parser::parseLit() {
+
+    Token tok = consNextToken();
+    
+    bool expr = (tok.type == TOK_BOOL_LIT ) ||
+                (tok.type == TOK_INT_LIT  ) ||
+                (tok.type == TOK_FLOAT_LIT) ||
+                (tok.type == TOK_CHAR_LIT );
+                
+    return expr;
+}
+bool Parser::parseType() {
+
+    Token tok = consNextToken();
+
+    bool expr = (tok.type == TOK_FLOAT) ||
+                (tok.type == TOK_INT  ) ||
+                (tok.type == TOK_BOOL ) ||
+                (tok.type == TOK_CHAR );
 
     return expr;
 }
