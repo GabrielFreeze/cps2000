@@ -131,7 +131,7 @@ bool Parser::parseIfStmt() {
 
                 ((peekNextToken().type != TOK_ELSE        ) || //(*)
                    ((consNextToken().type == TOK_ELSE     ) &&
-                   (parseBlock()                          )));
+                   (parseBlock()                         )));
 
 
     return expr;
@@ -166,21 +166,21 @@ bool Parser::parseIfStmt() {
 }
 bool Parser::parseForStmt() {
 
-    bool expr = (consNextToken().type == TOK_FOR         ) &&
-                (consNextToken().type == TOK_OPEN_BRACKET) &&
+    bool expr = (consNextToken().type == TOK_FOR          ) &&
+                (consNextToken().type == TOK_OPEN_BRACKET ) &&
+                 
+                ((peekNextToken().type != TOK_LET         ) ||
+                    (parseVarDecl()                       )) &&
+                 
+                (consNextToken().type == TOK_SEMICOLON    ) &&
+                (parseExpr()                              ) &&
+                (consNextToken().type == TOK_SEMICOLON    ) &&
+ 
+                ((peekNextToken().type != TOK_ID          ) ||
+                    (parseAssign()                       )) &&
                 
-                ((peekNextToken().type != TOK_LET        ) ||
-                    (parseVarDecl()                      )) &&
-                
-                (consNextToken().type == TOK_SEMICOLON   ) &&
-                (parseExpr()                             ) &&
-                (consNextToken().type == TOK_SEMICOLON   ) &&
-
-                ((peekNextToken().type != TOK_ID         ) ||
-                    (parseAssign()                      )) &&
-                
-                (consNextToken().type == TOK_OPEN_BRACKET) &&
-                (parseBlock()                            );
+                (consNextToken().type == TOK_CLOSE_BRACKET) &&
+                (parseBlock()                             );
 
 
     return expr;
@@ -222,18 +222,16 @@ bool Parser::parseFuncDecl() {
 }
 bool Parser::parseFuncCall() {
 
-    if (!(parseIdentifier() && consNextToken().type == TOK_OPEN_BRACKET)) {
-        return false;
-    }
-
+    bool expr = (parseIdentifier()                         ) &&
+                (consNextToken().type == TOK_OPEN_BRACKET  ) &&
+                
+                ((peekNextToken().type == TOK_CLOSE_BRACKET) ||
+                    (parseActualParams()                  )) &&
+                
+                (consNextToken().type == TOK_CLOSE_BRACKET);
     
-    while (peekNextToken().type == TOK_COMMA) {
-        if (!(consNextToken().type == TOK_COMMA && parseExpr())) {
-            return false;
-        }
-    }  
-
-    return true;
+    
+    return expr;
 }
 bool Parser::parseFormalParams() {
 
@@ -250,6 +248,7 @@ bool Parser::parseFormalParams() {
 }
 bool Parser::parseActualParams() {
     
+
     if (!parseExpr())
         return false;
 
@@ -259,6 +258,7 @@ bool Parser::parseActualParams() {
         }
     }
 
+    
     return true;
 }
 bool Parser::parseFormalParam() {
@@ -353,10 +353,11 @@ bool Parser::parseFactor() {
     if (parseLit()) return true;
     next_token_index = this_token_index;
 
-    if (parseIdentifier()) return true;
+    //Order is important. FuncCall must be before Identfier because FuncCall ⊆ Identifier.
+    if (parseFuncCall()) return true; 
     next_token_index = this_token_index;
 
-    if (parseFuncCall()) return true;
+    if (parseIdentifier()) return true;
     next_token_index = this_token_index;
 
     if (parseSubExpr()) return true;

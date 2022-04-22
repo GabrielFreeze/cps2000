@@ -17,7 +17,7 @@ int main() {
     
 
     string line;
-    string filename = "programs/program_03.rs";
+    string filename = "programs/program_06.rs";
 
     string text;
     text = file_to_string(filename);
@@ -32,8 +32,8 @@ int main() {
     Parser parser(tokens);
 
 
-    lexer.printToken(tokens);
-    cout << '\n';
+    // lexer.printToken(tokens);
+    // cout << '\n';
 
     
     if (parser.parseProgram())
