@@ -32,11 +32,8 @@ int main() {
     lexer.printToken(tokens);
     cout << '\n';
 
-    
-    if (parser.parseProgram())
-        cout << "OK\n";
-        
-    
+    if (auto node = parser.parseProgram())
+        cout << "OK" << '\n';
 
     return 0;
 }

@@ -14,7 +14,7 @@ using namespace std;
 class Parser {
     public:
         Parser(vector<Token>& tokens);
-        bool parseProgram();
+        shared_ptr<ASTNode> parseProgram();
 
 
     private:
@@ -33,36 +33,36 @@ class Parser {
         Token peekNextToken();
         Token getCurrentToken();
 
-        bool parseType(ASTNode node);
-        bool parseBooleanLit(ASTNode node);
-        bool parseIntegerLit(ASTNode node);
-        bool parseFloatLit(ASTNode node);
-        bool parseCharLit(ASTNode node);
-        bool parseLit(ASTNode node);
-        bool parseIdentifier(ASTNode node);
-        bool parseMulOp(ASTNode node);
-        bool parseAddOp(ASTNode node);
-        bool parseRelOp(ASTNode node);
-        bool parseActualParams(ASTNode node);
-        bool parseFuncCall(ASTNode node);
-        bool parseSubExpr(ASTNode node);
-        bool parseUnOp(ASTNode node);
-        bool parseFactor(ASTNode node);
-        bool parseTerm(ASTNode node);
-        bool parseSimpleExpr(ASTNode node);
-        bool parseExpr(ASTNode node);
-        bool parseAssign(ASTNode node);
-        bool parseVarDecl(ASTNode node);
-        bool parsePrintStmt(ASTNode node);
-        bool parseReturnStmt(ASTNode node);
-        bool parseIfStmt(ASTNode node);
-        bool parseForStmt(ASTNode node);
-        bool parseWhileStmt(ASTNode node);
-        bool parseFormalParam(ASTNode node);
-        bool parseFormalParams(ASTNode node);
-        bool parseFuncDecl(ASTNode node);
-        bool parseStmt(ASTNode node);
-        bool parseBlock(ASTNode node);
+        bool parseType(shared_ptr<ASTNode> node);
+        bool parseBooleanLit(shared_ptr<ASTNode> node);
+        bool parseIntegerLit(shared_ptr<ASTNode> node);
+        bool parseFloatLit(shared_ptr<ASTNode> node);
+        bool parseCharLit(shared_ptr<ASTNode> node);
+        bool parseLit(shared_ptr<ASTNode> node);
+        bool parseIdentifier(shared_ptr<ASTNode> node);
+        bool parseMulOp(shared_ptr<ASTNode> node);
+        bool parseAddOp(shared_ptr<ASTNode> node);
+        bool parseRelOp(shared_ptr<ASTNode> node);
+        bool parseActualParams(shared_ptr<ASTNode> node);
+        bool parseFuncCall(shared_ptr<ASTNode> node);
+        bool parseSubExpr(shared_ptr<ASTNode> node);
+        bool parseUnOp(shared_ptr<ASTNode> node);
+        bool parseFactor(shared_ptr<ASTNode> node);
+        bool parseTerm(shared_ptr<ASTNode> node);
+        bool parseSimpleExpr(shared_ptr<ASTNode> node);
+        bool parseExpr(shared_ptr<ASTNode> node);
+        bool parseAssign(shared_ptr<ASTNode> node);
+        bool parseVarDecl(shared_ptr<ASTNode> node);
+        bool parsePrintStmt(shared_ptr<ASTNode> node);
+        bool parseReturnStmt(shared_ptr<ASTNode> node);
+        bool parseIfStmt(shared_ptr<ASTNode> node);
+        bool parseForStmt(shared_ptr<ASTNode> node);
+        bool parseWhileStmt(shared_ptr<ASTNode> node);
+        bool parseFormalParam(shared_ptr<ASTNode> node);
+        bool parseFormalParams(shared_ptr<ASTNode> node);
+        bool parseFuncDecl(shared_ptr<ASTNode> node);
+        bool parseStmt(shared_ptr<ASTNode> node);
+        bool parseBlock(shared_ptr<ASTNode> node);
 
 };
 
