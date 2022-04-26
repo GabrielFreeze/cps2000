@@ -40,6 +40,7 @@ class Parser {
 
         //For error reporting
         Token errToken;
+        token_type expTyp;
         void printError();
         void setErrToken();
 

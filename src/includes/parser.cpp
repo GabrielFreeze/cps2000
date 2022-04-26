@@ -6,15 +6,36 @@ Parser::Parser(vector<Token>& tokens) {
     this->tokens = tokens; //Pass all tokens to the parser before parsing begins.
     tokens_length = tokens.size();
     next_token_index = 0;
+
+    expTyp = TOK_EMPTY;
 }
 
 void Parser::printError() {
     
     Token tok = getCurrentToken();
+    vector<string> map = {"(",")","{","}",";",":",",","=","integer value","float value","char value","(*, /, and)","(not, -)","(+,-,or)",
+                          "(<,>,==,!=,<=,>=)","->","<comment>","boolean value","identifier",
+                          "for","while","if","else","let","print","return","fn","float","int","bool","char","<empty>"};
+    
+    
+    string exp_lexeme = map[expTyp];
 
-    cout << ANSI_RED << "Syntax Error: " << ANSI_ESC << ANSI_YEL << tok.lexeme << ANSI_ESC << ANSI_RED << " [" << ANSI_ESC << ANSI_YEL
-    << tok.ln << ANSI_ESC << ANSI_RED << ',' << ANSI_ESC << ANSI_YEL << tok.col
-    << ANSI_ESC << ANSI_RED "]"  << ANSI_ESC << '\n';
+    if (expTyp == TOK_SEMICOLON &&
+       (tok.type == TOK_ID || tok.type == TOK_BOOL_LIT || tok.type == TOK_FLOAT_LIT || tok.type == TOK_INT_LIT || tok.type == TOK_CHAR_LIT)) {
+           
+        cout << ANSI_RED << "\nSyntax Error: " << ANSI_ESC << ANSI_YEL << "Expected a " << exp_lexeme << ANSI_ESC
+             << ANSI_RED << "[" << ANSI_ESC << ANSI_YEL
+             << tok.ln << ANSI_ESC << ANSI_RED << ',' << ANSI_ESC << ANSI_YEL << tok.col
+             << ANSI_ESC << ANSI_RED "]"  << ANSI_ESC << '\n';
+        
+        return;
+    }
+
+
+    cout << ANSI_RED << "\nSyntax Error: " << ANSI_ESC << ANSI_YEL << "Expected \"" << exp_lexeme <<"\", got \"" << tok.lexeme << "\" " << ANSI_ESC
+         << ANSI_RED << "[" << ANSI_ESC << ANSI_YEL
+         <<  tok.ln << ANSI_ESC << ANSI_RED << ',' << ANSI_ESC << ANSI_YEL << tok.col
+         << ANSI_ESC << ANSI_RED "]"  << ANSI_ESC << '\n';
 }
 
 Token Parser::consNextToken() {
@@ -61,77 +82,130 @@ bool Parser::parseProgram() {
 bool Parser::parseStmt() {
     
     Token tok = peekNextToken();
+    bool expr;
 
-    bool expr = ((tok.type == TOK_LET                   ) &&
-                 (parseVarDecl()                        ) &&
-                 (consNextToken().type == TOK_SEMICOLON)) ||
+    switch (tok.type) {
+        case TOK_LET: {
+            expr = parseVarDecl() &&
+                   (consNextToken().type == (expTyp=TOK_SEMICOLON));
+        } break;
 
-                ((tok.type == TOK_ID                    ) &&
-                 (parseAssign()                         ) &&
-                 (consNextToken().type == TOK_SEMICOLON)) ||
-                
-                ((tok.type == TOK_PRINT                 ) &&
-                 (parsePrintStmt()                      ) &&
-                 (consNextToken().type == TOK_SEMICOLON)) ||
+        case TOK_ID: {
+            expr = parseAssign() &&
+                   (consNextToken().type == (expTyp=TOK_SEMICOLON));
+        } break;
 
-                ((tok.type == TOK_IF                    ) &&
-                 (parseIfStmt()                        )) ||
+        case TOK_PRINT: {
+            expr = parsePrintStmt() &&
+                   (consNextToken().type == (expTyp=TOK_SEMICOLON));
+        } break;
 
-                ((tok.type == TOK_FOR                   ) &&
-                 (parseForStmt()                       )) ||
+        case TOK_IF: {
+            expr = parseIfStmt();
+        } break;
 
-                ((tok.type == TOK_WHILE                 ) &&
-                 (parseWhileStmt()                     )) ||
+        case TOK_FOR: {
+            expr = parseForStmt();
+        } break;
 
-                ((tok.type == TOK_RETURN                ) &&
-                 (parseReturnStmt()                     ) &&
-                 (consNextToken().type == TOK_SEMICOLON)) ||
+        case TOK_WHILE: {
+            expr = parseWhileStmt();
+        } break;
 
-                ((tok.type == TOK_FN                    ) &&
-                 (parseFuncDecl()                      )) ||
+        case TOK_RETURN: {
+            expr = parseReturnStmt() &&
+                   (consNextToken().type == (expTyp=TOK_SEMICOLON));
+        } break;
 
-                ((tok.type == TOK_OPEN_CURLY            ) &&
-                 (parseBlock()                         ));
-    
+        case TOK_FN: {
+            expr = parseFuncDecl();
+        } break;
+
+        case TOK_OPEN_CURLY: {
+            expr = parseBlock();
+        } break;
+
+        default: return false;
+    }   
+
     return expr;
+    
+    
+
+
+
+    // bool expr = ((tok.type == (expTyp=TOK_LET)                   ) &&
+    //              (parseVarDecl()                                 ) &&
+    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
+
+    //             ((tok.type == (expTyp=TOK_ID)                    ) &&
+    //              (parseAssign()                                  ) &&
+    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
+                
+    //             ((tok.type == (expTyp=TOK_PRINT)                 ) &&
+    //              (parsePrintStmt()                               ) &&
+    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
+
+    //             ((tok.type == (expTyp=TOK_IF)                    ) &&
+    //              (parseIfStmt()                                 )) ||
+
+    //             ((tok.type == (expTyp=TOK_FOR)                   ) &&
+    //              (parseForStmt()                                )) ||
+
+    //             ((tok.type == (expTyp=TOK_WHILE)                 ) &&
+    //              (parseWhileStmt()                              )) ||
+
+    //             ((tok.type == (expTyp=TOK_RETURN)                ) &&
+    //              (parseReturnStmt()                              ) &&
+    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
+
+    //             ((tok.type == (expTyp=TOK_FN)                    ) &&
+    //              (parseFuncDecl()                               )) ||
+
+    //             ((tok.type == (expTyp=TOK_OPEN_CURLY)            ) &&
+    //              (parseBlock()                                   ));
+    
+
+
+    // return expr;
 }
 bool Parser::parseVarDecl() {
     
-    bool expr = (consNextToken().type == TOK_LET      ) &&
-                (parseIdentifier()                    ) &&
-                (consNextToken().type == TOK_COLON) &&
-                (parseType()                          ) &&
-                (consNextToken().type == TOK_EQUAL    ) &&
-                (parseExpr()                          );
+    bool expr = (consNextToken().type == (expTyp=TOK_LET)  ) &&
+                (parseIdentifier()                         ) &&
+                (consNextToken().type == (expTyp=TOK_COLON)) &&
+                (parseType()                               ) &&
+                (consNextToken().type == (expTyp=TOK_EQUAL)) &&
+                (parseExpr()                               );
 
     return expr;
 }
 bool Parser::parseAssign() {
     
-    bool expr = (parseIdentifier()                ) &&
-                (consNextToken().type == TOK_EQUAL) &&
-                (parseExpr()                      );
+    bool expr = (parseIdentifier()                         ) &&
+                (consNextToken().type == (expTyp=TOK_EQUAL)) &&
+                (parseExpr()                               );
 
     return expr;
 }
 bool Parser::parsePrintStmt() {
 
-    bool expr = (consNextToken().type == TOK_PRINT) &&
-                (parseExpr()                      );
+    bool expr = (consNextToken().type == (expTyp=TOK_PRINT)) &&
+                (parseExpr()                               );
 
     return expr;
 }
 bool Parser::parseIfStmt() {
 
-    bool expr = (consNextToken().type == TOK_IF           ) &&
-                (consNextToken().type == TOK_OPEN_BRACKET ) &&
-                (parseExpr()                              ) &&
-                (consNextToken().type == TOK_CLOSE_BRACKET) &&
-                (parseBlock()                             ) &&
+    bool expr = (consNextToken().type == (expTyp=TOK_IF)           ) &&
+                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
+                (parseExpr()                                       ) &&
+                (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
+                (parseBlock()                                      ) &&
 
-                ((peekNextToken().type != TOK_ELSE        ) || //(*)
-                   ((consNextToken().type == TOK_ELSE     ) &&
-                   (parseBlock()                         )));
+                ((peekNextToken().type != TOK_ELSE                 ) || //(*)
+                   ((consNextToken().type == (expTyp=TOK_ELSE)     ) &&
+                   (parseBlock()                                  )));
 
 
     return expr;
@@ -166,21 +240,21 @@ bool Parser::parseIfStmt() {
 }
 bool Parser::parseForStmt() {
 
-    bool expr = (consNextToken().type == TOK_FOR          ) &&
-                (consNextToken().type == TOK_OPEN_BRACKET ) &&
+    bool expr = (consNextToken().type == (expTyp=TOK_FOR)          ) &&
+                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
                  
-                ((peekNextToken().type != TOK_LET         ) ||
-                    (parseVarDecl()                       )) &&
+                ((peekNextToken().type != TOK_LET                  ) ||
+                    (parseVarDecl()                               )) &&
                  
-                (consNextToken().type == TOK_SEMICOLON    ) &&
-                (parseExpr()                              ) &&
-                (consNextToken().type == TOK_SEMICOLON    ) &&
+                (consNextToken().type == (expTyp=TOK_SEMICOLON)    ) &&
+                (parseExpr()                                       ) &&
+                (consNextToken().type == (expTyp=TOK_SEMICOLON)    ) &&
  
-                ((peekNextToken().type != TOK_ID          ) ||
-                    (parseAssign()                       )) &&
+                ((peekNextToken().type != TOK_ID                   ) ||
+                    (parseAssign()                                )) &&
                 
-                (consNextToken().type == TOK_CLOSE_BRACKET) &&
-                (parseBlock()                             );
+                (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
+                (parseBlock()                                      );
 
 
     return expr;
@@ -188,47 +262,47 @@ bool Parser::parseForStmt() {
 }
 bool Parser::parseWhileStmt() {
     
-    bool expr = (consNextToken().type == TOK_WHILE        ) &&
-                (consNextToken().type == TOK_OPEN_BRACKET ) &&
-                (parseExpr()                              ) &&
-                (consNextToken().type == TOK_CLOSE_BRACKET) &&
-                (parseBlock()                             );
+    bool expr = (consNextToken().type == (expTyp=TOK_WHILE)        ) &&
+                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
+                (parseExpr()                                       ) &&
+                (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
+                (parseBlock()                                      );
     
     return expr;
 }
 bool Parser::parseReturnStmt() {
     
-    bool expr = (consNextToken().type == TOK_RETURN) &&
-                (parseExpr()                       );
+    bool expr = (consNextToken().type == (expTyp=TOK_RETURN)) &&
+                (parseExpr()                                );
     
     return expr;
 }
 
 bool Parser::parseFuncDecl() {
 
-    bool expr = (consNextToken().type == TOK_FN           ) &&
-                (parseIdentifier()                        ) &&
-                (consNextToken().type == TOK_OPEN_BRACKET ) &&
+    bool expr = (consNextToken().type == (expTyp=TOK_FN)           ) &&
+                (parseIdentifier()                                 ) &&
+                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
 
-                ((peekNextToken().type != TOK_ID          ) ||
-                    (parseFormalParams()                 )) &&
+                ((peekNextToken().type != TOK_ID                   ) ||
+                    (parseFormalParams()                          )) &&
 
-                (consNextToken().type == TOK_CLOSE_BRACKET) &&
-                (consNextToken().type == TOK_ARROW        ) &&
-                (parseType()                              ) &&
-                (parseBlock()                             );
+                (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
+                (consNextToken().type == (expTyp=TOK_ARROW)        ) &&
+                (parseType()                                       ) &&
+                (parseBlock()                                      );
 
     return expr;
 }
 bool Parser::parseFuncCall() {
 
-    bool expr = (parseIdentifier()                         ) &&
-                (consNextToken().type == TOK_OPEN_BRACKET  ) &&
+    bool expr = (parseIdentifier()                                  ) &&
+                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET)  ) &&
                 
-                ((peekNextToken().type == TOK_CLOSE_BRACKET) ||
-                    (parseActualParams()                  )) &&
+                ((peekNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) ||
+                    (parseActualParams()                           )) &&
                 
-                (consNextToken().type == TOK_CLOSE_BRACKET);
+                (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET));
     
     
     return expr;
@@ -238,8 +312,8 @@ bool Parser::parseFormalParams() {
     if (!parseFormalParam())
         return false;
     
-    while (peekNextToken().type == TOK_COMMA) {
-        if (!(consNextToken().type == TOK_COMMA && parseFormalParam())) {
+    while (peekNextToken().type == (expTyp=TOK_COMMA)) {
+        if (!(consNextToken().type == (expTyp=TOK_COMMA) && parseFormalParam())) {
             return false;
         }
     }
@@ -248,12 +322,11 @@ bool Parser::parseFormalParams() {
 }
 bool Parser::parseActualParams() {
     
-
     if (!parseExpr())
         return false;
 
-    while (peekNextToken().type == TOK_COMMA) {
-        if (!(consNextToken().type == TOK_COMMA && parseExpr())) {
+    while (peekNextToken().type == (expTyp=TOK_COMMA)) {
+        if (!(consNextToken().type == (expTyp=TOK_COMMA) && parseExpr())) {
             return false;
         }
     }
@@ -263,9 +336,9 @@ bool Parser::parseActualParams() {
 }
 bool Parser::parseFormalParam() {
     
-    bool expr = (parseIdentifier()                ) &&
-                (consNextToken().type == TOK_COLON) &&
-                (parseType()                      );
+    bool expr = (parseIdentifier()                         ) &&
+                (consNextToken().type == (expTyp=TOK_COLON)) &&
+                (parseType()                               );
     
     return expr;
 }
@@ -285,13 +358,12 @@ bool Parser::parseBlock() {
     if (consNextToken().type != TOK_CLOSE_CURLY)
         return false;
     
-    // if (!expr) cout << 'F';
     return true;
     
 }
 bool Parser::parseIdentifier() {
     
-    bool expr = (consNextToken().type == TOK_ID);
+    bool expr = (consNextToken().type == (expTyp=TOK_ID));
 
     return expr;
 }
@@ -301,7 +373,7 @@ bool Parser::parseExpr() {
     if (!parseSimpleExpr())
         return false;
 
-    while (peekNextToken().type == TOK_RELOP) {
+    while (peekNextToken().type == (expTyp=TOK_RELOP)) {
         if (!(parseRelOp() && parseSimpleExpr())){
             return false;
         }
@@ -314,7 +386,7 @@ bool Parser::parseSimpleExpr() {
     if (!parseTerm())
         return false;
     
-    while (peekNextToken().type == TOK_ADDOP) {
+    while (peekNextToken().type == (expTyp=TOK_ADDOP)) {
         if (!(parseAddOp() && parseTerm())) {
             return false;
         }
@@ -324,9 +396,9 @@ bool Parser::parseSimpleExpr() {
 }
 bool Parser::parseSubExpr() {
 
-    bool expr = (consNextToken().type == TOK_OPEN_BRACKET ) &&
-                (parseExpr()                              ) &&
-                (consNextToken().type == TOK_CLOSE_BRACKET);
+    bool expr = (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
+                (parseExpr()                                       ) &&
+                (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET));
 
     return expr;
 }
@@ -336,7 +408,7 @@ bool Parser::parseTerm() {
     if (!parseFactor())
         return false;
 
-    while (peekNextToken().type == TOK_MULOP) {
+    while (peekNextToken().type == (expTyp=TOK_MULOP)) {
         if (!(parseMulOp() && parseFactor())) {
             return false;
         }
@@ -371,13 +443,13 @@ bool Parser::parseFactor() {
 }
 bool Parser::parseMulOp() {
  
-    bool expr = (consNextToken().type == TOK_MULOP);
+    bool expr = (consNextToken().type == (expTyp=TOK_MULOP));
 
     return expr;
 }
 bool Parser::parseAddOp() {
     
-    bool expr = (consNextToken().type == TOK_ADDOP);
+    bool expr = (consNextToken().type == (expTyp=TOK_ADDOP));
 
     return expr;
 }
@@ -385,15 +457,15 @@ bool Parser::parseUnOp() {
 
     Token tok = consNextToken();
 
-    bool expr = ((tok.type == TOK_ADDOP && tok.lexeme == "-") ||
-                 (tok.type == TOK_UNOP                     )) &&
-                 (parseExpr()                              );
+    bool expr = ((tok.type == (expTyp=TOK_ADDOP) && tok.lexeme == "-") ||
+                 (tok.type == (expTyp=TOK_UNOP)                     )) &&
+                 (parseExpr()                                        );
 
     return expr;   
 }
 bool Parser::parseRelOp() {
 
-    bool expr = (consNextToken().type == TOK_RELOP);
+    bool expr = (consNextToken().type == (expTyp=TOK_RELOP));
 
     return expr;
 }
@@ -402,10 +474,10 @@ bool Parser::parseLit() {
 
     Token tok = consNextToken();
     
-    bool expr = (tok.type == TOK_BOOL_LIT ) ||
-                (tok.type == TOK_INT_LIT  ) ||
-                (tok.type == TOK_FLOAT_LIT) ||
-                (tok.type == TOK_CHAR_LIT );
+    bool expr = (tok.type == (expTyp=TOK_BOOL_LIT) ) ||
+                (tok.type == (expTyp=TOK_INT_LIT)  ) ||
+                (tok.type == (expTyp=TOK_FLOAT_LIT)) ||
+                (tok.type == (expTyp=TOK_CHAR_LIT) );
                 
     return expr;
 }
@@ -413,10 +485,10 @@ bool Parser::parseType() {
 
     Token tok = consNextToken();
 
-    bool expr = (tok.type == TOK_FLOAT) ||
-                (tok.type == TOK_INT  ) ||
-                (tok.type == TOK_BOOL ) ||
-                (tok.type == TOK_CHAR );
+    bool expr = (tok.type == (expTyp=TOK_FLOAT)) ||
+                (tok.type == (expTyp=TOK_INT)  ) ||
+                (tok.type == (expTyp=TOK_BOOL) ) ||
+                (tok.type == (expTyp=TOK_CHAR) );
 
     return expr;
 }
