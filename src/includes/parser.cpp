@@ -63,13 +63,16 @@ Token Parser::getCurrentToken() {
 
 bool Parser::parseProgram() {
 
+    ASTNode programNode(AST_PROGRAM);
+
+
     // Remove all comment tokens.
     tokens.erase(remove_if(tokens.begin(), tokens.end(), [](const Token& tok) { return tok.type == TOK_COMMENT;}), tokens.end());
     tokens_length = tokens.size();
 
     while (peekNextToken().type != TOK_EMPTY) {
         
-        if (!parseStmt()) {
+        if (!parseStmt(programNode)) {
             printError();
             return false;
         }
@@ -78,134 +81,94 @@ bool Parser::parseProgram() {
 
     return true;
 }
-
-bool Parser::parseStmt() {
+bool Parser::parseStmt(ASTNode node) {
     
     Token tok = peekNextToken();
     bool expr;
 
     switch (tok.type) {
         case TOK_LET: {
-            expr = parseVarDecl() &&
+            expr = parseVarDecl(node) &&
                    (consNextToken().type == (expTyp=TOK_SEMICOLON));
         } break;
 
         case TOK_ID: {
-            expr = parseAssign() &&
+            expr = parseAssign(node) &&
                    (consNextToken().type == (expTyp=TOK_SEMICOLON));
         } break;
 
         case TOK_PRINT: {
-            expr = parsePrintStmt() &&
+            expr = parsePrintStmt(node) &&
                    (consNextToken().type == (expTyp=TOK_SEMICOLON));
         } break;
 
         case TOK_IF: {
-            expr = parseIfStmt();
+            expr = parseIfStmt(node);
         } break;
 
         case TOK_FOR: {
-            expr = parseForStmt();
+            expr = parseForStmt(node);
         } break;
 
         case TOK_WHILE: {
-            expr = parseWhileStmt();
+            expr = parseWhileStmt(node);
         } break;
 
         case TOK_RETURN: {
-            expr = parseReturnStmt() &&
+            expr = parseReturnStmt(node) &&
                    (consNextToken().type == (expTyp=TOK_SEMICOLON));
         } break;
 
         case TOK_FN: {
-            expr = parseFuncDecl();
+            expr = parseFuncDecl(node);
         } break;
 
         case TOK_OPEN_CURLY: {
-            expr = parseBlock();
+            expr = parseBlock(node);
         } break;
 
         default: return false;
     }   
 
     return expr;
-    
-    
-
-
-
-    // bool expr = ((tok.type == (expTyp=TOK_LET)                   ) &&
-    //              (parseVarDecl()                                 ) &&
-    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
-
-    //             ((tok.type == (expTyp=TOK_ID)                    ) &&
-    //              (parseAssign()                                  ) &&
-    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
-                
-    //             ((tok.type == (expTyp=TOK_PRINT)                 ) &&
-    //              (parsePrintStmt()                               ) &&
-    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
-
-    //             ((tok.type == (expTyp=TOK_IF)                    ) &&
-    //              (parseIfStmt()                                 )) ||
-
-    //             ((tok.type == (expTyp=TOK_FOR)                   ) &&
-    //              (parseForStmt()                                )) ||
-
-    //             ((tok.type == (expTyp=TOK_WHILE)                 ) &&
-    //              (parseWhileStmt()                              )) ||
-
-    //             ((tok.type == (expTyp=TOK_RETURN)                ) &&
-    //              (parseReturnStmt()                              ) &&
-    //              (consNextToken().type == (expTyp=TOK_SEMICOLON))) ||
-
-    //             ((tok.type == (expTyp=TOK_FN)                    ) &&
-    //              (parseFuncDecl()                               )) ||
-
-    //             ((tok.type == (expTyp=TOK_OPEN_CURLY)            ) &&
-    //              (parseBlock()                                   ));
-    
-
-
-    // return expr;
 }
-bool Parser::parseVarDecl() {
+bool Parser::parseVarDecl(ASTNode node) {
     
-    bool expr = (consNextToken().type == (expTyp=TOK_LET)  ) &&
-                (parseIdentifier()                         ) &&
-                (consNextToken().type == (expTyp=TOK_COLON)) &&
-                (parseType()                               ) &&
-                (consNextToken().type == (expTyp=TOK_EQUAL)) &&
-                (parseExpr()                               );
+    bool expr = (consNextToken().type == (expTyp=TOK_LET)      ) &&
+                (parseIdentifier(node)                         ) &&
+                (consNextToken().type == (expTyp=TOK_COLON)    ) &&
+                (parseType(node)                               ) &&
+                (consNextToken().type == (expTyp=TOK_EQUAL)    ) &&
+                (parseExpr(node)                               );
 
     return expr;
 }
-bool Parser::parseAssign() {
+bool Parser::parseAssign(ASTNode node) {
     
-    bool expr = (parseIdentifier()                         ) &&
-                (consNextToken().type == (expTyp=TOK_EQUAL)) &&
-                (parseExpr()                               );
+    bool expr = (parseIdentifier(node)                         ) &&
+                (consNextToken().type == (expTyp=TOK_EQUAL)    ) &&
+                (parseExpr(node)                               );
 
     return expr;
 }
-bool Parser::parsePrintStmt() {
+bool Parser::parsePrintStmt(ASTNode node) {
 
-    bool expr = (consNextToken().type == (expTyp=TOK_PRINT)) &&
-                (parseExpr()                               );
+    bool expr = (consNextToken().type == (expTyp=TOK_PRINT)    ) &&
+                (parseExpr(node)                               );
 
     return expr;
 }
-bool Parser::parseIfStmt() {
+bool Parser::parseIfStmt(ASTNode node) {
 
     bool expr = (consNextToken().type == (expTyp=TOK_IF)           ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
-                (parseExpr()                                       ) &&
+                (parseExpr(node)                                   ) &&
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
-                (parseBlock()                                      ) &&
+                (parseBlock(node)                                  ) &&
 
                 ((peekNextToken().type != TOK_ELSE                 ) || //(*)
                    ((consNextToken().type == (expTyp=TOK_ELSE)     ) &&
-                   (parseBlock()                                  )));
+                   (parseBlock(node)                               )));
 
 
     return expr;
@@ -236,97 +199,97 @@ bool Parser::parseIfStmt() {
     // }
 
     // return exprA && exprB;
-
 }
-bool Parser::parseForStmt() {
+bool Parser::parseForStmt(ASTNode node) {
 
     bool expr = (consNextToken().type == (expTyp=TOK_FOR)          ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
                  
                 ((peekNextToken().type != TOK_LET                  ) ||
-                    (parseVarDecl()                               )) &&
+                    (parseVarDecl(node)                            )) &&
                  
                 (consNextToken().type == (expTyp=TOK_SEMICOLON)    ) &&
-                (parseExpr()                                       ) &&
+                (parseExpr(node)                                   ) &&
                 (consNextToken().type == (expTyp=TOK_SEMICOLON)    ) &&
  
                 ((peekNextToken().type != TOK_ID                   ) ||
-                    (parseAssign()                                )) &&
+                    (parseAssign(node)                             )) &&
                 
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
-                (parseBlock()                                      );
+                (parseBlock(node)                                  );
+
 
 
     return expr;
                 
 }
-bool Parser::parseWhileStmt() {
+bool Parser::parseWhileStmt(ASTNode node) {
     
     bool expr = (consNextToken().type == (expTyp=TOK_WHILE)        ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
-                (parseExpr()                                       ) &&
+                (parseExpr(node)                                   ) &&
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
-                (parseBlock()                                      );
+                (parseBlock(node)                                  );
     
     return expr;
 }
-bool Parser::parseReturnStmt() {
+bool Parser::parseReturnStmt(ASTNode node) {
     
     bool expr = (consNextToken().type == (expTyp=TOK_RETURN)) &&
-                (parseExpr()                                );
+                (parseExpr(node)                            );
     
     return expr;
 }
 
-bool Parser::parseFuncDecl() {
+bool Parser::parseFuncDecl(ASTNode node) {
 
     bool expr = (consNextToken().type == (expTyp=TOK_FN)           ) &&
-                (parseIdentifier()                                 ) &&
+                (parseIdentifier(node)                             ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
 
                 ((peekNextToken().type != TOK_ID                   ) ||
-                    (parseFormalParams()                          )) &&
+                    (parseFormalParams(node)                      )) &&
 
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
                 (consNextToken().type == (expTyp=TOK_ARROW)        ) &&
-                (parseType()                                       ) &&
-                (parseBlock()                                      );
+                (parseType(node)                                   ) &&
+                (parseBlock(node)                                  );
 
     return expr;
 }
-bool Parser::parseFuncCall() {
+bool Parser::parseFuncCall(ASTNode node) {
 
-    bool expr = (parseIdentifier()                                  ) &&
-                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET)  ) &&
+    bool expr = (parseIdentifier(node                               ) &&
+                (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) )) &&
                 
                 ((peekNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) ||
-                    (parseActualParams()                           )) &&
+                    (parseActualParams(node)                       )) &&
                 
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET));
     
     
     return expr;
 }
-bool Parser::parseFormalParams() {
+bool Parser::parseFormalParams(ASTNode node) {
 
-    if (!parseFormalParam())
+    if (!parseFormalParam(node))
         return false;
     
     while (peekNextToken().type == (expTyp=TOK_COMMA)) {
-        if (!(consNextToken().type == (expTyp=TOK_COMMA) && parseFormalParam())) {
+        if (!(consNextToken().type == (expTyp=TOK_COMMA) && parseFormalParam(node))) {
             return false;
         }
     }
 
     return true;
 }
-bool Parser::parseActualParams() {
+bool Parser::parseActualParams(ASTNode node) {
     
-    if (!parseExpr())
+    if (!parseExpr(node))
         return false;
 
     while (peekNextToken().type == (expTyp=TOK_COMMA)) {
-        if (!(consNextToken().type == (expTyp=TOK_COMMA) && parseExpr())) {
+        if (!(consNextToken().type == (expTyp=TOK_COMMA) && parseExpr(node))) {
             return false;
         }
     }
@@ -334,23 +297,23 @@ bool Parser::parseActualParams() {
     
     return true;
 }
-bool Parser::parseFormalParam() {
+bool Parser::parseFormalParam(ASTNode node) {
     
-    bool expr = (parseIdentifier()                         ) &&
+    bool expr = (parseIdentifier(node)                     ) &&
                 (consNextToken().type == (expTyp=TOK_COLON)) &&
-                (parseType()                               );
+                (parseType(node)                           );
     
     return expr;
 }
 
-bool Parser::parseBlock() {
+bool Parser::parseBlock(ASTNode node) {
 
     if (consNextToken().type != TOK_OPEN_CURLY)
         return false;
 
 
     while (peekNextToken().type != TOK_CLOSE_CURLY) {
-        if (!parseStmt()) {
+        if (!parseStmt(node)) {
             return false;
         }
     }
@@ -361,116 +324,120 @@ bool Parser::parseBlock() {
     return true;
     
 }
-bool Parser::parseIdentifier() {
+bool Parser::parseIdentifier(ASTNode node) {
     
     bool expr = (consNextToken().type == (expTyp=TOK_ID));
 
     return expr;
 }
 
-bool Parser::parseExpr() {
+bool Parser::parseExpr(ASTNode node) {
 
-    if (!parseSimpleExpr())
+    if (!parseSimpleExpr(node))
         return false;
 
     while (peekNextToken().type == (expTyp=TOK_RELOP)) {
-        if (!(parseRelOp() && parseSimpleExpr())){
+        if (!(parseRelOp(node) && parseSimpleExpr(node))){
             return false;
         }
     }
 
     return true;
 }
-bool Parser::parseSimpleExpr() {
+bool Parser::parseSimpleExpr(ASTNode node) {
     
-    if (!parseTerm())
+    if (!parseTerm(node))
         return false;
     
     while (peekNextToken().type == (expTyp=TOK_ADDOP)) {
-        if (!(parseAddOp() && parseTerm())) {
+        if (!(parseAddOp(node) && parseTerm(node))) {
             return false;
         }
     }
 
     return true;
 }
-bool Parser::parseSubExpr() {
+bool Parser::parseSubExpr(ASTNode node) {
 
     bool expr = (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
-                (parseExpr()                                       ) &&
+                (parseExpr(node)                                   ) &&
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET));
 
     return expr;
 }
 
-bool Parser::parseTerm() {
+bool Parser::parseTerm(ASTNode node) {
 
-    if (!parseFactor())
+    if (!parseFactor(node))
         return false;
 
     while (peekNextToken().type == (expTyp=TOK_MULOP)) {
-        if (!(parseMulOp() && parseFactor())) {
+        if (!(parseMulOp(node) && parseFactor(node))) {
             return false;
         }
     }
 
     return true;
 }
-bool Parser::parseFactor() {
+bool Parser::parseFactor(ASTNode node) {
     size_t this_token_index = next_token_index;
 
     /*Attempt to match with Literal, Identifier, FunctionCall, SubExpr or Unary.
     Another approach was to check the next token, but it would be too long since
     literal expands to 4 more non-terminals */
-    if (parseLit()) return true;
+    if (parseLit(node)) return true;
     next_token_index = this_token_index;
 
     //Order is important. FuncCall must be before Identfier because FuncCall ⊆ Identifier.
-    if (parseFuncCall()) return true; 
+    if (parseFuncCall(node)) return true; 
     next_token_index = this_token_index;
 
-    if (parseIdentifier()) return true;
+    if (parseIdentifier(node)) return true;
     next_token_index = this_token_index;
 
-    if (parseSubExpr()) return true;
+    if (parseSubExpr(node)) return true;
     next_token_index = this_token_index;
 
-    if (parseUnOp()) return true;
+    if (parseUnOp(node)) return true;
     next_token_index = this_token_index;
+
+    //In order to give correct error messages. Show that the next token should have been an ID.
+    expTyp = TOK_ID;
+    consNextToken();
 
     return false;
 
 }
-bool Parser::parseMulOp() {
+bool Parser::parseMulOp(ASTNode node) {
  
     bool expr = (consNextToken().type == (expTyp=TOK_MULOP));
 
     return expr;
 }
-bool Parser::parseAddOp() {
+bool Parser::parseAddOp(ASTNode node) {
     
     bool expr = (consNextToken().type == (expTyp=TOK_ADDOP));
 
     return expr;
 }
-bool Parser::parseUnOp() {
+bool Parser::parseUnOp(ASTNode node) {
 
     Token tok = consNextToken();
 
     bool expr = ((tok.type == (expTyp=TOK_ADDOP) && tok.lexeme == "-") ||
                  (tok.type == (expTyp=TOK_UNOP)                     )) &&
-                 (parseExpr()                                        );
+                 (parseExpr(node)                                        );
 
     return expr;   
 }
-bool Parser::parseRelOp() {
+bool Parser::parseRelOp(ASTNode node) {
 
     bool expr = (consNextToken().type == (expTyp=TOK_RELOP));
 
     return expr;
 }
 
-bool Parser::parseLit() {
+bool Parser::parseLit(ASTNode node) {
 
     Token tok = consNextToken();
     
@@ -481,7 +448,7 @@ bool Parser::parseLit() {
                 
     return expr;
 }
-bool Parser::parseType() {
+bool Parser::parseType(ASTNode node) {
 
     Token tok = consNextToken();
 

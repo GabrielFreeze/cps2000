@@ -17,15 +17,12 @@ int main() {
     
 
     string line;
-    string filename = "programs/program_07.rs";
+    string filename = "programs/program_03.rs";
 
     string text;
     text = file_to_string(filename);
 
     print_program(text);
-   
-    
-
 
     vector<Token> tokens = lexer.getTokens(text);
 

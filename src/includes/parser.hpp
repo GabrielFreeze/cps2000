@@ -6,23 +6,9 @@
 #include <bits/stdc++.h>
 
 #include "lexer.hpp"
+#include "ASTNode.hpp"
 
 using namespace std;
-
-enum node_type {AST_LETTER, AST_DIGIT, AST_PRINTABLE, AST_TYPE, AST_BOOL_LIT, AST_INT_LIT,
-                AST_FLOAT_LIT, AST_CHAR_LIT, AST_LIT, AST_IDENTIFIER, AST_MULOP,
-                AST_ADDOP, AST_RELOP, AST_ACTUAL_PARAMS, AST_FUNC_CALL, AST_SUB_EXPR, AST_UNOP,
-                AST_FACTOR, AST_TERM, AST_SIMPLE_EXPR, AST_EXPR, AST_ASSIGN, AST_VAR_DECL, AST_PRINT_STMT,
-                AST_RETURN_STMT, AST_IF_STMT, AST_FOR_STMT, AST_WHILE_STMT, AST_FORMAL_PARAM,
-                AST_FORMAL_PARAMS, AST_FUNC_DECL, AST_STMT, AST_BLOCK, AST_PROGRAM};
-
-typedef struct ASTNode_ {
-    node_type type;
-    vector<shared_ptr<ASTNode_>> children;
-    shared_ptr<ASTNode_> parent;
-    string literal;
-} ASTNode;
-
 
 
 class Parser {
@@ -37,50 +23,46 @@ class Parser {
         size_t next_token_index;
         size_t tokens_length;
 
-
         //For error reporting
         Token errToken;
         token_type expTyp;
         void printError();
         void setErrToken();
 
-
         Token consNextToken();
         Token peekNextToken();
         Token getCurrentToken();
 
-
-        bool parseType();
-        bool parseBooleanLit();
-        bool parseIntegerLit();
-        bool parseFloatLit();
-        bool parseCharLit();
-        bool parseLit();
-        bool parseIdentifier();
-        bool parseMulOp();
-        bool parseAddOp();
-        bool parseRelOp();
-        bool parseActualParams();
-        bool parseFuncCall();
-        bool parseSubExpr();
-        bool parseUnOp();
-        bool parseFactor();
-        bool parseTerm();
-        bool parseSimpleExpr();
-        bool parseExpr();
-        bool parseAssign();
-        bool parseVarDecl();
-        bool parsePrintStmt();
-        bool parseReturnStmt();
-        bool parseIfStmt();
-        bool parseForStmt();
-        bool parseWhileStmt();
-        bool parseFormalParam();
-        bool parseFormalParams();
-        bool parseFuncDecl();
-        bool parseStmt();
-        bool parseBlock();
-
+        bool parseType(ASTNode node);
+        bool parseBooleanLit(ASTNode node);
+        bool parseIntegerLit(ASTNode node);
+        bool parseFloatLit(ASTNode node);
+        bool parseCharLit(ASTNode node);
+        bool parseLit(ASTNode node);
+        bool parseIdentifier(ASTNode node);
+        bool parseMulOp(ASTNode node);
+        bool parseAddOp(ASTNode node);
+        bool parseRelOp(ASTNode node);
+        bool parseActualParams(ASTNode node);
+        bool parseFuncCall(ASTNode node);
+        bool parseSubExpr(ASTNode node);
+        bool parseUnOp(ASTNode node);
+        bool parseFactor(ASTNode node);
+        bool parseTerm(ASTNode node);
+        bool parseSimpleExpr(ASTNode node);
+        bool parseExpr(ASTNode node);
+        bool parseAssign(ASTNode node);
+        bool parseVarDecl(ASTNode node);
+        bool parsePrintStmt(ASTNode node);
+        bool parseReturnStmt(ASTNode node);
+        bool parseIfStmt(ASTNode node);
+        bool parseForStmt(ASTNode node);
+        bool parseWhileStmt(ASTNode node);
+        bool parseFormalParam(ASTNode node);
+        bool parseFormalParams(ASTNode node);
+        bool parseFuncDecl(ASTNode node);
+        bool parseStmt(ASTNode node);
+        bool parseBlock(ASTNode node);
 
 };
 

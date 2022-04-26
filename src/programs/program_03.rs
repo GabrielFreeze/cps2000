@@ -2,7 +2,7 @@
 
 let t : char = '2'; /*Variable Initalised*/
 
-while (x < y) {
+while (x > y) {
     x = x + 1.3;
     y = y - 2;
 }
