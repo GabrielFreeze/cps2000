@@ -1,1 +1,1 @@
-let x: int = 6+ 3*4;
+let x: int = 3;
