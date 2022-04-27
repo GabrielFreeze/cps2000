@@ -64,8 +64,8 @@ Token Parser::getCurrentToken() {
 shared_ptr<ASTNode> Parser::parseProgram() {
 
     auto programNode = make_shared<ASTNode>(AST_PROGRAM);
-
-
+    auto blockNode = make_shared<ASTNode>(AST_BLOCK);
+    programNode->add_child(blockNode);
 
     // Remove all comment tokens.
     tokens.erase(remove_if(tokens.begin(), tokens.end(), [](const Token& tok) { return tok.type == TOK_COMMENT;}), tokens.end());
@@ -73,7 +73,7 @@ shared_ptr<ASTNode> Parser::parseProgram() {
 
     while (peekNextToken().type != TOK_EMPTY) {
         
-        if (!parseStmt(programNode)) {
+        if (!parseStmt(blockNode)) {
             printError();
             return nullptr;
         }
@@ -89,13 +89,8 @@ bool Parser::parseStmt(shared_ptr<ASTNode> node) {
 
     switch (tok.type) {
         case TOK_LET: { //Variable Declaration.
-            
-            auto new_node = make_shared<ASTNode>(AST_VAR_DECL);
-            
-            expr = parseVarDecl(new_node) &&
+            expr = parseVarDecl(node) &&
                    (consNextToken().type == (expTyp=TOK_SEMICOLON));
-            
-            node->add_child(new_node);
         } break;
 
         case TOK_ID: { //Variable Assignment.
@@ -422,7 +417,7 @@ bool Parser::parseSubExpr(shared_ptr<ASTNode> node) {
 
 bool Parser::parseTerm(shared_ptr<ASTNode> node) {
 
-    auto new_node = make_shared<ASTNode>(AST_FOR_STMT);
+    auto new_node = make_shared<ASTNode>(AST_TERM);
 
     if (!parseFactor(new_node))
         return false;
@@ -445,28 +440,43 @@ bool Parser::parseFactor(shared_ptr<ASTNode> node) {
     /*Attempt to match with Literal, Identifier, FunctionCall, SubExpr or Unary.
     Another approach was to check the next token, but it would be too long since
     literal expands to 4 more non-terminals */
-    if (parseLit(new_node)) return true;
+    if (parseLit(new_node)) {
+        node->add_child(new_node);
+        return true;
+    } 
 
     next_token_index = this_token_index;
     new_node->children.clear();
 
     //Order is important. FuncCall must be before Identfier because FuncCall ⊆ Identifier.
-    if (parseFuncCall(new_node)) return true;
+    if (parseFuncCall(new_node)) {
+        node->add_child(new_node);
+        return true;
+    } 
 
     next_token_index = this_token_index;
     new_node->children.clear();
 
-    if (parseIdentifier(new_node)) return true;
+    if (parseIdentifier(new_node)) {
+        node->add_child(new_node);
+        return true;
+    } 
 
     next_token_index = this_token_index;
     new_node->children.clear();
 
-    if (parseSubExpr(new_node)) return true;
+    if (parseSubExpr(new_node)) {
+        node->add_child(new_node);
+        return true;
+    } 
 
     next_token_index = this_token_index;
     new_node->children.clear();
 
-    if (parseUnOp(new_node)) return true;
+    if (parseUnOp(new_node)) {
+        node->add_child(new_node);
+        return true;
+    } 
 
     next_token_index = this_token_index;
     new_node->children.clear();
@@ -558,3 +568,5 @@ bool Parser::parseType(shared_ptr<ASTNode> node) {
 
     return expr;
 }
+
+//TODO: LOOK INTO VISITOR CLASS. MAKE XML GENERATION OF GRAPH IN ORDER TO DEBUG.

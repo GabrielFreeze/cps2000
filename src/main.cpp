@@ -3,6 +3,7 @@
 #include <sstream>
 #include "includes/lexer.hpp"
 #include "includes/parser.hpp"
+#include "includes/visitor.hpp"
 
 using namespace std;
 
@@ -17,7 +18,8 @@ int main() {
     
 
     string line;
-    string filename = "programs/program_03.rs";
+    string filename = "programs/program_07.rs";
+    string xml_filename = "xml/xml_01.xml";
 
     string text;
     text = file_to_string(filename);
@@ -32,8 +34,18 @@ int main() {
     lexer.printToken(tokens);
     cout << '\n';
 
-    if (auto node = parser.parseProgram())
-        cout << "OK" << '\n';
+    shared_ptr<ASTNode> rootNode;
+    if (!(rootNode = parser.parseProgram()))
+        exit(EXIT_FAILURE);
+
+
+
+    XMLVisitor xmlVisitor(xml_filename);
+    xmlVisitor.visit(rootNode);
+    
+
+
+
 
     return 0;
 }

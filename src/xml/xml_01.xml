@@ -1,0 +1,17 @@
+<PROGRAM>
+	<BLOCK>
+		<VAR_DECL>
+			<IDENTIFIER x> x </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<LIT 3> 3 </LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+	</BLOCK>
+</PROGRAM>

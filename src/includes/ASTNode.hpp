@@ -16,7 +16,7 @@ enum node_type {AST_LETTER, AST_DIGIT, AST_PRINTABLE, AST_TYPE, AST_BOOL_LIT, AS
                 AST_FORMAL_PARAMS, AST_FUNC_DECL, AST_STMT, AST_BLOCK, AST_PROGRAM};
 
 
-class ASTNode : public enable_shared_from_this<ASTNode>{
+class ASTNode: public enable_shared_from_this<ASTNode>{
     public:
         node_type type;
         vector<shared_ptr<ASTNode>> children;

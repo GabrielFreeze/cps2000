@@ -181,9 +181,7 @@ void Lexer::printToken(vector<Token> tokens) {
 
 
     }
-
-
-    
+   
     
 }
 
@@ -208,7 +206,6 @@ vector<Token> Lexer::getTokens(string input_text) {
             prev_char_counter = char_counter;
             char_counter = 0;
         } char_counter ++;
-
 
 
         //Get the transition corresponding to c.
@@ -238,12 +235,12 @@ vector<Token> Lexer::getTokens(string input_text) {
 
             //If the current_state is empty and it hasn't traversed an accepting state before then there is a syntax error.
             if (last_final == empty) {
-                cerr << "\nInvalid token " << current_lexeme << " at [" << nl_counter <<","<< char_counter-3 << "] -> [" << c << "]\n";
+                cerr << "\nInvalid token " << current_lexeme << " at [" << nl_counter <<","<< char_counter-2 << "] -> [" << c << "]\n";
                 exit(EXIT_FAILURE);
             }
             
             //Otherwise, the end of the lexeme is the character where the last final state was encountered.
-            // cout << current_lexeme << '\n';
+
             //Truncate lexeme.
             current_lexeme.resize(current_lexeme.length() - rollback_counter); 
             

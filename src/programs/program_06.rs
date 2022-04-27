@@ -9,5 +9,5 @@ fn nth_fibonacci(n:int) -> int {
         a = c;
     }
 
-    retrun a;
+    return a;
 }
