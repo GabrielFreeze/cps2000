@@ -7,7 +7,33 @@
 				<SIMPLE_EXPR>
 					<TERM>
 						<FACTOR>
-							<LIT 3> 3 </LIT>
+							<SUB_EXPR>
+								<EXPR>
+									<SIMPLE_EXPR>
+										<TERM>
+											<FACTOR>
+												<LIT 5> 5 </LIT>
+											</FACTOR>
+										</TERM>
+									</SIMPLE_EXPR>
+									<RELOP >> </RELOP>
+									<SIMPLE_EXPR>
+										<TERM>
+											<FACTOR>
+												<IDENTIFIER y> y </IDENTIFIER>
+											</FACTOR>
+										</TERM>
+									</SIMPLE_EXPR>
+								</EXPR>
+							</SUB_EXPR>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+				<RELOP <> </RELOP>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<LIT 10> 10 </LIT>
 						</FACTOR>
 					</TERM>
 				</SIMPLE_EXPR>

@@ -1,1 +1,1 @@
-let x: int = 3;
+let x: int = (5>y) < 10;
