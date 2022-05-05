@@ -1,1 +1,1 @@
-let x: int = (5>y) < 10;
+let x: int = 7+4 * 18;
