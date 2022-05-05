@@ -1,6 +1,7 @@
 #pragma once
 
 #include "parser.hpp"
+#include "lexer.hpp"
 #include <string>
 #include <map>
 #include <vector>
@@ -15,16 +16,18 @@ class ScopeStk {
     public:
         ScopeStk();
 
-        map<string,string> getTop();
-        map<string,string> pop();
-        void push(map<string,string>);
+        map<string,identifier_type> getTop();
+        map<string,identifier_type> pop();
+        void push(map<string,identifier_type> value);
 
-        bool isDecl(string id);
+        int isDecl(string id);
+        int isFuncDecl(string id);
 
-        //TODO: change type to enum
+        pair<int,token_type> getFuncAttr(string id);
+
         void addSymbol(string lexeme, identifier_type typ);
 
     private:
-        vector<map<string,string>> scopeStk;
-        int x;
+        vector<map<string,identifier_type>> scopeStk;
+        map<string,pair<int,token_type>> functions;
 };

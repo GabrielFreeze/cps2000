@@ -57,7 +57,6 @@ identifier_type SemanticVisitor::getIdentifierType(string typ) {
     if (typ == "float") return ID_FLOAT;
     if (typ == "char")  return ID_CHAR;
     if (typ == "bool")  return ID_BOOL;
-    if (typ == "func")  return ID_FUNC;
 
     return ID_EMPTY;
 }
@@ -81,14 +80,18 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
     switch (node->type) {
 
-
+        case AST_PROGRAM: {
+            if (!visitChildren(node)) {
+                //Print error message
+            }
+        }
 
 
         case AST_BLOCK: {
             //Push new scope
-            scopeStk.push(map<string,string>());
+            scopeStk.push(map<string,identifier_type>());
             
-            if(!visitChildren(node))
+            if (!visitChildren(node))
                 return false;
 
             //Pop scope
@@ -121,19 +124,44 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             
             if (!scopeStk.isDecl(node->attr)) {
                 //Save error message: Identifier has not been declared
+                return false;
             }
 
         } break;
 
         case AST_FUNC_CALL: {
-            //Assert call has the same number of parameters as declaration.
+
+            auto identifier_node = node->children[0];
+            auto actual_params_node = node->children[1];
+
+            //Assert function exists
+            if (!scopeStk.isFuncDecl(identifier_node->attr)) {
+                //Save error message: Function has no declaration
+                return false;
+            }
+
+            //Assert function has same number of parameters.
+            int expected = scopeStk.getFuncAttr(identifier_node->attr).first;
+            int actual = actual_params_node->children.size();
+
+            if (expected != actual) {
+                //Save error message: Function expects _ parameters, _ given.
+                return false;
+            }      
 
         } break;
 
         case AST_FUNC_DECL: {
-            //Assert that the function returns a value.
 
-            //Check if the return value is valid.
+            auto identifier_node = node->children[0];
+
+            //Assert that the function is declared once
+            if (scopeStk.isFuncDecl(identifier_node->attr) != 1) {
+                //Save error message: Multiple definitions of __ found
+                return false;
+            }
+
+            
 
             
         }

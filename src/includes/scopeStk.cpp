@@ -3,30 +3,39 @@
 ScopeStk::ScopeStk() {
 
 }
-//TODO: implementpremonition
-void ScopeStk::push(map<string,string>) {
+//TODO: implement
+void ScopeStk::push(map<string, identifier_type> value) {
+    scopeStk.push_back(value);
 }
-//TODO: implementpremonition
-map<string,string> ScopeStk::pop() {
-    auto m = map<string,string>();
-    return m;
+map<string, identifier_type> ScopeStk::pop() {
+    auto scope = getTop();
+    scopeStk.pop_back();
+    return scope;
+}
+pair<int,token_type> ScopeStk::getFuncAttr(string id) {
+    return functions.find(id)->second;
 }
 
+int ScopeStk::isFuncDecl(string id) {
+    return functions.count(id);
+}
 
-//TODO: Check all symbol tables for identifier id.
-bool ScopeStk::isDecl(string id) {
-    return true;
+int ScopeStk::isDecl(string id) {
+    
+    int count = 0;
+
+    for (auto scope : scopeStk) {
+        count += scope.count(id);
+    }
+
+    return count;
 } 
 
-
-//TODO: implementpremonition
-map<string,string> ScopeStk::getTop() {
-    auto m = map<string,string>();
-    return m;
+map<string, identifier_type> ScopeStk::getTop() {
+    return scopeStk[scopeStk.size()-1];
 }
 
 
-//TODO: Add element to current symbol table
-void addSymbol(string lexeme, identifier_type type) {
-    int x;
+void ScopeStk::addSymbol(string lexeme, identifier_type type) {
+    scopeStk[scopeStk.size()-1].insert(pair<string,identifier_type>(lexeme, type));    
 }
