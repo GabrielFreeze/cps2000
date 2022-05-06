@@ -1,1 +1,5 @@
-let x: int = 7+4 * 18;
+fn Func() -> float {
+    return Func();
+}
+
+let x: float = Func();

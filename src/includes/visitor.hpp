@@ -30,7 +30,7 @@ class SemanticVisitor: public Visitor {
     private:
         bool visitChildren(shared_ptr<ASTNode> node);
         identifier_type getIdentifierType(string typ);
-        
+        bool blockReturns(shared_ptr<ASTNode> node);
 
         ScopeStk scopeStk;
         
