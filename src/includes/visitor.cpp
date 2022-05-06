@@ -60,7 +60,24 @@ identifier_type SemanticVisitor::getIdentifierType(string typ) {
 
     return ID_EMPTY;
 }
+bool SemanticVisitor::blockReturns(shared_ptr<ASTNode> node) {
 
+    //Base Case: Find a return statement at the end of the block
+
+    /*General Case:
+        • Find last if-else statement
+            •If none return false
+
+        • blockReturns(if_node)
+            •If false return false
+        
+        • blockReturns(else_node)
+            •If false return false
+        
+        •return true
+    */
+
+}
 
 bool SemanticVisitor::visitChildren(shared_ptr<ASTNode> node) {
     
@@ -140,7 +157,7 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
                 return false;
             }
 
-            //Assert function has same number of parameters.
+            //Assert function has same number of parameters as declaration.
             int expected = scopeStk.getFuncAttr(identifier_node->attr).first;
             int actual = actual_params_node->children.size();
 
@@ -161,9 +178,15 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
                 return false;
             }
 
-            
+            //Assert that the function returns an expression
 
-            
+            if (!blockReturns(node)) {
+                //Save error message: Function does not return a value in all branchees of execution
+                return false;
+            }
+                 
+
+           
         }
     }
     
