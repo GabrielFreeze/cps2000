@@ -3,6 +3,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include "colors.hpp"
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -31,19 +32,6 @@ enum state {S_START, S_A, S_B, S_C, S_D, S_E, S_F, S_EMPTY, S_ID,
             S_ADDOP_A, S_ADDOP_B,
             S_RELOP_A, S_RELOP_B, S_RELOP_C,
             S_ARROW, S_COMMENT_A, S_COMMENT_B};
-
-
-
-#define ANSI_BLK "\e[0;30m"
-#define ANSI_RED "\e[0;31m"
-#define ANSI_GRN "\e[0;32m"
-#define ANSI_YEL "\e[0;33m"
-#define ANSI_BLU "\e[0;34m"
-#define ANSI_MAG "\e[0;35m"
-#define ANSI_CYN "\e[0;36m"
-#define ANSI_WHT "\e[0;37m"
-#define ANSI_ESC "\e[0m"
-
 
 
 

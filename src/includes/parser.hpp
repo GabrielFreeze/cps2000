@@ -6,6 +6,7 @@
 #include <bits/stdc++.h>
 
 #include "lexer.hpp"
+#include "colors.hpp"
 #include "ASTNode.hpp"
 
 using namespace std;

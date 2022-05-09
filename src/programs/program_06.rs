@@ -11,3 +11,7 @@ fn nth_fibonacci(n:int) -> int {
 
     return a;
 }
+
+fn nth_fibonacci() -> float {
+    return 2.0;
+}

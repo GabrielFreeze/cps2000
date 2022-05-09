@@ -24,13 +24,16 @@ class SemanticVisitor: public Visitor {
     public: 
         SemanticVisitor();
         virtual bool visit(shared_ptr<ASTNode> node, int depth=0);
-        
+        bool visitFuncDecl(shared_ptr<ASTNode> node);
+        bool analyseFuncDecl(shared_ptr<ASTNode> root_node);
 
 
     private:
         bool visitChildren(shared_ptr<ASTNode> node);
         identifier_type getIdentifierType(string typ);
+        return_type getReturnType(string lexeme);
         bool blockReturns(shared_ptr<ASTNode> node);
+        void printError();
 
         ScopeStk scopeStk;
         

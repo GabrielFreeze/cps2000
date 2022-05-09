@@ -24,7 +24,7 @@ void Parser::printError() {
        (tok.type == TOK_ID || tok.type == TOK_BOOL_LIT || tok.type == TOK_FLOAT_LIT || tok.type == TOK_INT_LIT || tok.type == TOK_CHAR_LIT)) {
            
         cout << ANSI_RED << "\nSyntax Error: " << ANSI_ESC << ANSI_YEL << "Expected a " << exp_lexeme << ANSI_ESC
-             << ANSI_RED << "[" << ANSI_ESC << ANSI_YEL
+             << ANSI_RED << " [" << ANSI_ESC << ANSI_YEL
              << tok.ln << ANSI_ESC << ANSI_RED << ',' << ANSI_ESC << ANSI_YEL << tok.col
              << ANSI_ESC << ANSI_RED "]"  << ANSI_ESC << '\n';
         
@@ -32,10 +32,10 @@ void Parser::printError() {
     }
 
 
-    cout << ANSI_RED << "\nSyntax Error: " << ANSI_ESC << ANSI_YEL << "Expected \"" << exp_lexeme <<"\", got \"" << tok.lexeme << "\" " << ANSI_ESC
-         << ANSI_RED << "[" << ANSI_ESC << ANSI_YEL
-         <<  tok.ln << ANSI_ESC << ANSI_RED << ',' << ANSI_ESC << ANSI_YEL << tok.col
-         << ANSI_ESC << ANSI_RED "]"  << ANSI_ESC << '\n';
+    cout << ANSI_RED << "\nSyntax Error: " << ANSI_YEL << "Expected \"" << exp_lexeme <<"\", got \"" << tok.lexeme << "\" "
+         << ANSI_RED << "[" << ANSI_YEL
+         <<  tok.ln << ANSI_RED << ',' << ANSI_YEL << tok.col
+         << ANSI_RED "]"  << '\n';
 }
 
 Token Parser::consNextToken() {
@@ -164,10 +164,12 @@ bool Parser::parseAssign(shared_ptr<ASTNode> node) {
 bool Parser::parsePrintStmt(shared_ptr<ASTNode> node) {
 
     auto new_node = make_shared<ASTNode>(AST_PRINT_STMT);
+    Token tok = consNextToken();
     
-    bool expr = (consNextToken().type == (expTyp=TOK_PRINT)    ) &&
+    bool expr = (tok.type == (expTyp=TOK_PRINT)                ) &&
                 (parseExpr(new_node)                           );
 
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -175,8 +177,9 @@ bool Parser::parsePrintStmt(shared_ptr<ASTNode> node) {
 bool Parser::parseIfStmt(shared_ptr<ASTNode> node) {
 
     auto new_node = make_shared<ASTNode>(AST_IF_STMT);
+    Token tok = consNextToken();
 
-    bool expr = (consNextToken().type == (expTyp=TOK_IF)           ) &&
+    bool expr = (tok.type == (expTyp=TOK_IF)                       ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
                 (parseExpr(new_node)                               ) &&
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
@@ -186,6 +189,7 @@ bool Parser::parseIfStmt(shared_ptr<ASTNode> node) {
                    ((consNextToken().type == (expTyp=TOK_ELSE)     ) &&
                    (parseBlock(new_node)                         )));
 
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -202,8 +206,9 @@ bool Parser::parseIfStmt(shared_ptr<ASTNode> node) {
 bool Parser::parseForStmt(shared_ptr<ASTNode> node) {
 
     auto new_node = make_shared<ASTNode>(AST_FOR_STMT);
+    Token tok = consNextToken();
 
-    bool expr = (consNextToken().type == (expTyp=TOK_FOR)          ) &&
+    bool expr = (tok.type == (expTyp=TOK_FOR)                      ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
                  
                 ((peekNextToken().type != TOK_LET                  ) ||
@@ -219,7 +224,7 @@ bool Parser::parseForStmt(shared_ptr<ASTNode> node) {
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
                 (parseBlock(new_node)                              );
 
-
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -228,13 +233,16 @@ bool Parser::parseForStmt(shared_ptr<ASTNode> node) {
 bool Parser::parseWhileStmt(shared_ptr<ASTNode> node) {
     
     auto new_node = make_shared<ASTNode>(AST_WHILE_STMT);
+    Token tok = consNextToken();
 
-    bool expr = (consNextToken().type == (expTyp=TOK_WHILE)        ) &&
+
+    bool expr = (tok.type == (expTyp=TOK_WHILE)                    ) &&
                 (consNextToken().type == (expTyp=TOK_OPEN_BRACKET) ) &&
                 (parseExpr(new_node)                               ) &&
                 (consNextToken().type == (expTyp=TOK_CLOSE_BRACKET)) &&
                 (parseBlock(new_node)                              );
     
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -242,10 +250,12 @@ bool Parser::parseWhileStmt(shared_ptr<ASTNode> node) {
 bool Parser::parseReturnStmt(shared_ptr<ASTNode> node) {
     
     auto new_node = make_shared<ASTNode>(AST_RETURN_STMT);
+    Token tok = consNextToken();
 
-    bool expr = (consNextToken().type == (expTyp=TOK_RETURN)) &&
+    bool expr = (tok.type == (expTyp=TOK_RETURN)) &&
                 (parseExpr(new_node)                        );
     
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -266,6 +276,10 @@ bool Parser::parseFuncDecl(shared_ptr<ASTNode> node) {
                 (consNextToken().type == (expTyp=TOK_ARROW)        ) &&
                 (parseType(new_node)                               ) &&
                 (parseBlock(new_node)                              );
+
+    //Get IdToken attached to new_node
+    node->token = new_node->children[0]->token;
+    node->attr  = new_node->children[0]->token.lexeme;
 
     node->add_child(new_node);
 
@@ -364,6 +378,7 @@ bool Parser::parseIdentifier(shared_ptr<ASTNode> node) {
     bool expr = (tok.type == (expTyp=TOK_ID));
 
     new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -494,9 +509,12 @@ bool Parser::parseFactor(shared_ptr<ASTNode> node) {
 bool Parser::parseMulOp(shared_ptr<ASTNode> node) {
     
     auto new_node = make_shared<ASTNode>(AST_MULOP);
+    Token tok = consNextToken();
 
-    bool expr = (consNextToken().type == (expTyp=TOK_MULOP));
+    bool expr = (tok.type == (expTyp=TOK_MULOP));
 
+    new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -505,8 +523,12 @@ bool Parser::parseAddOp(shared_ptr<ASTNode> node) {
     
     auto new_node = make_shared<ASTNode>(AST_ADDOP);
 
-    bool expr = (consNextToken().type == (expTyp=TOK_ADDOP));
+    Token tok = consNextToken();
 
+    bool expr = (tok.type == (expTyp=TOK_ADDOP));
+
+    new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
     
     return expr;
@@ -521,6 +543,7 @@ bool Parser::parseUnOp(shared_ptr<ASTNode> node) {
                  (parseExpr(new_node)                                );
 
     new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;   
@@ -533,6 +556,7 @@ bool Parser::parseRelOp(shared_ptr<ASTNode> node) {
     bool expr = (tok.type == (expTyp=TOK_RELOP));
 
     new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -549,6 +573,7 @@ bool Parser::parseLit(shared_ptr<ASTNode> node) {
                 (tok.type == (expTyp=TOK_CHAR_LIT) );
     
     new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
@@ -565,9 +590,9 @@ bool Parser::parseType(shared_ptr<ASTNode> node) {
 
 
     new_node->attr = tok.lexeme;
+    new_node->token = tok;
     node->add_child(new_node);
 
     return expr;
 }
 
-//TODO: LOOK INTO VISITOR CLASS. MAKE XML GENERATION OF GRAPH IN ORDER TO DEBUG.

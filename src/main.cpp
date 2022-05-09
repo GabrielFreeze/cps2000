@@ -13,11 +13,11 @@ void print_program(string& text);
 
 int main() {
 
-
+    
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_07.rs";
+    string filename = "programs/program_06.rs";
     string xml_filename = "xml/xml_01.xml";
 
     string text;
@@ -27,19 +27,25 @@ int main() {
 
     vector<Token> tokens = lexer.getTokens(text);
 
-    Parser parser(tokens);
 
 
     lexer.printToken(tokens);
     cout << '\n';
 
     shared_ptr<ASTNode> rootNode;
+    Parser parser(tokens);
     if (!(rootNode = parser.parseProgram()))
         exit(EXIT_FAILURE);
 
 
     XMLVisitor xmlVisitor(xml_filename);
     xmlVisitor.visit(rootNode);
+
+    SemanticVisitor semanticVisitor;
+    
+    if (!semanticVisitor.analyseFuncDecl(rootNode)) {
+        exit(EXIT_FAILURE);
+    };
     
 
 

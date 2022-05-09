@@ -1,6 +1,5 @@
 #pragma once
 
-#include "parser.hpp"
 #include "lexer.hpp"
 #include <string>
 #include <map>
@@ -9,25 +8,50 @@
 using namespace std;
 
 
-enum identifier_type  {ID_INT, ID_FLOAT, ID_CHAR, ID_BOOL, ID_FUNC, ID_EMPTY};
+enum identifier_type    {ID_INT, ID_FLOAT, ID_CHAR, ID_BOOL, ID_FUNC, ID_EMPTY};
+enum return_type        {RETURN_INT, RETURN_FLOAT, RETURN_CHAR, RETURN_BOOL, RETURN_EMPTY};
+
+enum semantic_error_msg {SEMERR_FUNC_DECL_ALREADY_DECLARED,
+                         SEMERR_FUNC_DECL_NO_RETURN};
+
+typedef struct symbol_ {
+    string identifier;
+    identifier_type type;
+    float value;
+    Token token;
+} symbol;
+
+typedef struct symbolFunc_ {
+    string identifier;
+    return_type type;
+    int params;
+    Token token;
+} symbolFunc;
 
 
 class ScopeStk {
     public:
         ScopeStk();
 
-        map<string,identifier_type> getTop();
-        map<string,identifier_type> pop();
-        void push(map<string,identifier_type> value);
+        map<string,symbol> getTop();
+        map<string,symbol> pop();
+        void push(map<string,symbol> value);
 
         int isDecl(string id);
         int isFuncDecl(string id);
+        
 
-        pair<int,token_type> getFuncAttr(string id);
+        symbolFunc getFuncAttr(string id);
+        Token errToken;
+        semantic_error_msg errMsg;
 
-        void addSymbol(string lexeme, identifier_type typ);
+        void addFunction(string id, int params, return_type type_to_return, Token token);
+        void addSymbol(string id, identifier_type typ, float value, Token token);
 
     private:
-        vector<map<string,identifier_type>> scopeStk;
-        map<string,pair<int,token_type>> functions;
+        vector<map<string,symbol>> scopeStk;
+        map<string,symbolFunc> functions;
+
 };
+
+

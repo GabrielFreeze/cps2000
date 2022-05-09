@@ -235,7 +235,10 @@ vector<Token> Lexer::getTokens(string input_text) {
 
             //If the current_state is empty and it hasn't traversed an accepting state before then there is a syntax error.
             if (last_final == empty) {
-                cerr << "\nInvalid token " << current_lexeme << " at [" << nl_counter <<","<< char_counter-2 << "] -> [" << c << "]\n";
+                
+                cerr << ANSI_RED << "\nInvalid token: " << ANSI_YEL << current_lexeme << ANSI_RED <<
+                " [" << ANSI_YEL << nl_counter << ANSI_RED << ","<< ANSI_YEL <<
+                char_counter-2 << ANSI_RED << "]\n" << ANSI_ESC;
                 exit(EXIT_FAILURE);
             }
             

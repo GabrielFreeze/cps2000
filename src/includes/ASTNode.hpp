@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include "lexer.hpp"
 #include <algorithm>
 #include <bits/stdc++.h>
 
@@ -22,6 +23,7 @@ class ASTNode: public enable_shared_from_this<ASTNode>{
         vector<shared_ptr<ASTNode>> children;
         shared_ptr<ASTNode> parent;
         string attr;
+        Token token;
 
         ASTNode(node_type type);
         void add_child(shared_ptr<ASTNode> node);
