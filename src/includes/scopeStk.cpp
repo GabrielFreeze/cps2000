@@ -39,6 +39,9 @@ int ScopeStk::isDecl(string id) {
 } 
 
 map<string, symbol> ScopeStk::getTop() {
+    cout << "HELLLOOOOOOO";
+    scopeStk[scopeStk.size()-1];
+    cout << '2';
     return scopeStk[scopeStk.size()-1];
 }
 

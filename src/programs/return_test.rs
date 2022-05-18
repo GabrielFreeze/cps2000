@@ -7,12 +7,26 @@ fn Pow(x:float , n:int) -> float {
         for (; n>0; n=n-1) {
             y = y*x;
         }
+
+        if (y == 3) {
+            if (x == 2) {
+                return y;
+                x = 2;
+            }
+            else {
+                return x;
+            }
+        } else {
+            return y;
+        }
+        
     } else {
         for (; n < 0; n=n+1) {
             y = y/x;
         }
+
+        return x;
     }
-    return y;
 }
 
 let x : float = Pow(2.1,10);

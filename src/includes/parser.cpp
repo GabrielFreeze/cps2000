@@ -79,8 +79,6 @@ shared_ptr<ASTNode> Parser::parseProgram() {
         }
     }
 
-
-
     return programNode;
 }
 bool Parser::parseStmt(shared_ptr<ASTNode> node) {
@@ -145,6 +143,9 @@ bool Parser::parseVarDecl(shared_ptr<ASTNode> node) {
                 (consNextToken().type == (expTyp=TOK_EQUAL)    ) &&
                 (parseExpr(new_node)                           );
 
+    //Set VarDecl attribute to the name of the variable being declared.
+    new_node->attr = new_node->children[0]->attr;
+    
     node->add_child(new_node);
 
     return expr;

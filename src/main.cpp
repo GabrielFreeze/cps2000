@@ -17,7 +17,7 @@ int main() {
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_06.rs";
+    string filename = "programs/program_07.rs";
     string xml_filename = "xml/xml_01.xml";
 
     string text;
@@ -46,6 +46,10 @@ int main() {
     if (!semanticVisitor.analyseFuncDecl(rootNode)) {
         exit(EXIT_FAILURE);
     };
+    
+    if (!semanticVisitor.analyse(rootNode)) {
+        exit(EXIT_FAILURE);
+    }
     
 
 
