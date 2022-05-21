@@ -266,7 +266,7 @@ vector<Token> Lexer::getTokens(string input_text) {
             }
           
 
-            Token token = {type,current_lexeme, nl_counter, int(char_counter-current_lexeme.size()-1)};
+            Token token = {type,current_lexeme, nl_counter+1, int(char_counter-current_lexeme.size())};
 
             
             tokens.push_back(token);

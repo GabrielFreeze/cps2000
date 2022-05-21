@@ -33,7 +33,7 @@ fn AverageOfThree_2(x:float, y:float, z:float) -> float {
 let x:float = 2.4;
 let y:float = Sq(2.5);
 let z:float = Sq(x);
-print y;
+
 print x * z;
 print XGreaterY(x, 2.3);
 print XGreaterY_2(Sq(1.5), y);

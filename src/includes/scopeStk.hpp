@@ -14,7 +14,10 @@ enum return_type        {RETURN_INT, RETURN_FLOAT, RETURN_CHAR, RETURN_BOOL, RET
 enum semantic_error_msg {SEMERR_FUNC_DECL_ALREADY_DECLARED,
                          SEMERR_FUNC_DECL_NO_RETURN,
                          SEMERR_VAR_DECL_ALREADY_DECLARED,
-                         SEMERR_VAR_DECL_IDENTICAL_FUNCTION};
+                         SEMERR_VAR_DECL_IDENTICAL_FUNCTION,
+                         SEMERR_ID_NOT_DECLARED,
+                         SEMERR_FUNC_CALL_NOT_DECLARED,
+                         SEMERR_FUNC_CALL_WRONG_PARAM};
 
 typedef struct symbol_ {
     string identifier;
@@ -49,6 +52,8 @@ class ScopeStk {
         Token errToken;
         semantic_error_msg errMsg;
         Token corrToken;
+        int errExpectedParams;
+        int errActualParams;
 
         void addFunction(string id, int params, return_type type_to_return, Token token);
         void addSymbol(string id, identifier_type typ, float value, Token token);

@@ -11,13 +11,12 @@ string file_to_string(const string& path);
 void print_program(string& text);
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
-    
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_07.rs";
+    string filename = "programs/program_04.rs";
     string xml_filename = "xml/xml_01.xml";
 
     string text;
@@ -29,8 +28,8 @@ int main() {
 
 
 
-    lexer.printToken(tokens);
-    cout << '\n';
+    // lexer.printToken(tokens);
+    // cout << '\n';
 
     shared_ptr<ASTNode> rootNode;
     Parser parser(tokens);
@@ -47,6 +46,7 @@ int main() {
         exit(EXIT_FAILURE);
     };
     
+
     if (!semanticVisitor.analyse(rootNode)) {
         exit(EXIT_FAILURE);
     }
@@ -73,7 +73,7 @@ string file_to_string(const string& path) {
 }
 
 void print_program(string& text) {
-    int nl_counter = 0;
+    int nl_counter = 1;
     cout << ANSI_MAG << nl_counter++<<": " << ANSI_ESC;
     for (char& c : text) {
         if (c == '\n') {

@@ -1,0 +1,388 @@
+<PROGRAM>
+	<BLOCK>
+		<FUNC_DECL Sq>
+			<IDENTIFIER Sq> Sq </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER x> x </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE float> </TYPE>
+			<BLOCK>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER x> x </IDENTIFIER>
+								</FACTOR>
+								<MULOP *> * </MULOP>
+								<FACTOR>
+									<IDENTIFIER x> x </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL XGreaterY>
+			<IDENTIFIER XGreaterY> XGreaterY </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER x> x </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER y> y </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE bool> </TYPE>
+			<BLOCK>
+				<VAR_DECL ans>
+					<IDENTIFIER ans> ans </IDENTIFIER>
+					<TYPE bool> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<LIT true> true </LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<IF_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER y> y </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP >> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER x> x </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<BLOCK>
+						<ASSIGN>
+							<IDENTIFIER ans> ans </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<LIT false> false </LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+					</BLOCK>
+				</IF_STMT>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER ans> ans </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL XGreaterY_2>
+			<IDENTIFIER XGreaterY_2> XGreaterY_2 </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER x> x </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER y> y </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE bool> </TYPE>
+			<BLOCK>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER x> x </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP >> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER y> y </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL AverageOfThree>
+			<IDENTIFIER AverageOfThree> AverageOfThree </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER x> x </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER y> y </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER z> z </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE float> </TYPE>
+			<BLOCK>
+				<VAR_DECL total>
+					<IDENTIFIER total> total </IDENTIFIER>
+					<TYPE float> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER x> x </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+							<ADDOP +> + </ADDOP>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER y> y </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+							<ADDOP +> + </ADDOP>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER z> z </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER total> total </IDENTIFIER>
+								</FACTOR>
+								<MULOP /> / </MULOP>
+								<FACTOR>
+									<LIT 3> 3 </LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL AverageOfThree_2>
+			<IDENTIFIER AverageOfThree_2> AverageOfThree_2 </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER x> x </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER y> y </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER z> z </IDENTIFIER>
+					<TYPE float> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE float> </TYPE>
+			<BLOCK>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<SUB_EXPR>
+										<EXPR>
+											<SIMPLE_EXPR>
+												<TERM>
+													<FACTOR>
+														<IDENTIFIER x> x </IDENTIFIER>
+													</FACTOR>
+												</TERM>
+												<ADDOP +> + </ADDOP>
+												<TERM>
+													<FACTOR>
+														<IDENTIFIER y> y </IDENTIFIER>
+													</FACTOR>
+												</TERM>
+												<ADDOP +> + </ADDOP>
+												<TERM>
+													<FACTOR>
+														<IDENTIFIER z> z </IDENTIFIER>
+													</FACTOR>
+												</TERM>
+											</SIMPLE_EXPR>
+										</EXPR>
+									</SUB_EXPR>
+								</FACTOR>
+								<MULOP /> / </MULOP>
+								<FACTOR>
+									<LIT 3> 3 </LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<VAR_DECL x>
+			<IDENTIFIER x> x </IDENTIFIER>
+			<TYPE float> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<LIT 2.4> 2.4 </LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL y>
+			<IDENTIFIER y> y </IDENTIFIER>
+			<TYPE float> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<FUNC_CALL>
+								<IDENTIFIER Sq> Sq </IDENTIFIER>
+								<ACTUAL_PARAMS>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<LIT 2.5> 2.5 </LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ACTUAL_PARAMS>
+							</FUNC_CALL>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL z>
+			<IDENTIFIER z> z </IDENTIFIER>
+			<TYPE float> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<FUNC_CALL>
+								<IDENTIFIER Sq> Sq </IDENTIFIER>
+								<ACTUAL_PARAMS>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<IDENTIFIER x> x </IDENTIFIER>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ACTUAL_PARAMS>
+							</FUNC_CALL>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL XGreaterY>
+			<IDENTIFIER XGreaterY> XGreaterY </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<LIT 2> 2 </LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<PRINT_STMT>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<IDENTIFIER x> x </IDENTIFIER>
+						</FACTOR>
+						<MULOP *> * </MULOP>
+						<FACTOR>
+							<IDENTIFIER z> z </IDENTIFIER>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</PRINT_STMT>
+		<PRINT_STMT>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<FUNC_CALL>
+								<IDENTIFIER XGreaterY> XGreaterY </IDENTIFIER>
+								<ACTUAL_PARAMS>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<IDENTIFIER x> x </IDENTIFIER>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<LIT 2.3> 2.3 </LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ACTUAL_PARAMS>
+							</FUNC_CALL>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</PRINT_STMT>
+		<PRINT_STMT>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<FUNC_CALL>
+								<IDENTIFIER XGreaterY_2> XGreaterY_2 </IDENTIFIER>
+								<ACTUAL_PARAMS>

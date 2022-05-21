@@ -136,16 +136,16 @@ bool Parser::parseVarDecl(shared_ptr<ASTNode> node) {
     
     auto new_node = make_shared<ASTNode>(AST_VAR_DECL);
 
-    bool expr = (consNextToken().type == (expTyp=TOK_LET)      ) &&
-                (parseIdentifier(new_node)                     ) &&
-                (consNextToken().type == (expTyp=TOK_COLON)    ) &&
-                (parseType(new_node)                           ) &&
-                (consNextToken().type == (expTyp=TOK_EQUAL)    ) &&
-                (parseExpr(new_node)                           );
+    bool expr = (consNextToken().type == (expTyp=TOK_LET)  ) &&
+                (parseIdentifier(new_node)                 ) &&
+                (consNextToken().type == (expTyp=TOK_COLON)) &&
+                (parseType(new_node)                       ) &&
+                (consNextToken().type == (expTyp=TOK_EQUAL)) &&
+                (parseExpr(new_node)                       );
 
     //Set VarDecl attribute to the name of the variable being declared.
-    new_node->attr = new_node->children[0]->attr;
-    
+    new_node->attr  = new_node->children[0]->attr;
+    new_node->token = new_node->children[0]->token;
     node->add_child(new_node);
 
     return expr;
@@ -279,8 +279,8 @@ bool Parser::parseFuncDecl(shared_ptr<ASTNode> node) {
                 (parseBlock(new_node)                              );
 
     //Get IdToken attached to new_node
-    node->token = new_node->children[0]->token;
-    node->attr  = new_node->children[0]->token.lexeme;
+    new_node->token = new_node->children[0]->token;
+    new_node->attr  = new_node->children[0]->token.lexeme;
 
     node->add_child(new_node);
 
