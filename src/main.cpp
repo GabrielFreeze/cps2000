@@ -12,11 +12,11 @@ void print_program(string& text);
 
 
 int main(int argc, char* argv[]) {
-
+    
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_04.rs";
+    string filename = "programs/program_03.rs";
     string xml_filename = "xml/xml_01.xml";
 
     string text;
@@ -51,9 +51,6 @@ int main(int argc, char* argv[]) {
         exit(EXIT_FAILURE);
     }
     
-
-
-
 
     return 0;
 }

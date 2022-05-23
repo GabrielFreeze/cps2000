@@ -8,7 +8,7 @@
 using namespace std;
 
 
-enum identifier_type    {ID_INT, ID_FLOAT, ID_CHAR, ID_BOOL, ID_FUNC, ID_EMPTY};
+enum identifier_type    {ID_EMPTY, ID_BOOL, ID_CHAR, ID_INT, ID_FLOAT, ID_FUNC}; //DO NOT CHANGE ORDER
 enum return_type        {RETURN_INT, RETURN_FLOAT, RETURN_CHAR, RETURN_BOOL, RETURN_EMPTY};
 
 enum semantic_error_msg {SEMERR_FUNC_DECL_ALREADY_DECLARED,
@@ -17,12 +17,18 @@ enum semantic_error_msg {SEMERR_FUNC_DECL_ALREADY_DECLARED,
                          SEMERR_VAR_DECL_IDENTICAL_FUNCTION,
                          SEMERR_ID_NOT_DECLARED,
                          SEMERR_FUNC_CALL_NOT_DECLARED,
-                         SEMERR_FUNC_CALL_WRONG_PARAM};
+                         SEMERR_FUNC_CALL_WRONG_PARAM,
+                         SEMERR_TYPE_INVALID_CHAR_CONVERSION};
+
+typedef struct value_ {
+    float data;
+    identifier_type type;
+} value;
 
 typedef struct symbol_ {
     string identifier;
     identifier_type type;
-    float value;
+    value val;
     Token token;
 } symbol;
 
@@ -32,6 +38,8 @@ typedef struct symbolFunc_ {
     int params;
     Token token;
 } symbolFunc;
+
+
 
 
 class ScopeStk {
@@ -56,7 +64,7 @@ class ScopeStk {
         int errActualParams;
 
         void addFunction(string id, int params, return_type type_to_return, Token token);
-        void addSymbol(string id, identifier_type typ, float value, Token token);
+        void addSymbol(string id, identifier_type typ, value val, Token token);
 
     private:
         vector<map<string,symbol>> scopeStk;

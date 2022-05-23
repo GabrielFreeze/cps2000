@@ -1,9 +1,20 @@
-/* Initalising Variable */ let x : float = 10; /*Variable Initalised*/
+// fn nth_fibonacci(n:int) -> int {
+//     let a:int = 0;
+//     let b:int = 1;
+//     let c:int = 0;
 
-let t : char = '2'; /*Variable Initalised*/
+//     for (let i:int = 0; i < n; i = i+1) {
+//         c = b;
+//         b = a+b;
+//         a = c;
+//     }
 
-while (x > y) {
-    x = x + 1.3;
-    y = y - 2;
-}
-x=2;
+//     return a;
+// }
+
+// fn return_char() -> int {
+//     return 'a';
+// }
+
+let i: float = -4;
+

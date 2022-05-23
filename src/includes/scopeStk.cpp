@@ -43,6 +43,6 @@ map<string, symbol> ScopeStk::getTop() {
 }
 
 
-void ScopeStk::addSymbol(string id, identifier_type type, float value, Token token) {
-    scopeStk[scopeStk.size()-1].insert(pair<string,symbol>(id, {id,type,value,token}));    
+void ScopeStk::addSymbol(string id, identifier_type type, value val, Token token) {
+    scopeStk[scopeStk.size()-1].insert(pair<string,symbol>(id, {id,type,val,token}));    
 }

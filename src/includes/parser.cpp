@@ -566,18 +566,22 @@ bool Parser::parseRelOp(shared_ptr<ASTNode> node) {
 bool Parser::parseLit(shared_ptr<ASTNode> node) {
 
     Token tok = consNextToken();
-    auto new_node = make_shared<ASTNode>(AST_LIT);
-    
-    bool expr = (tok.type == (expTyp=TOK_BOOL_LIT) ) ||
-                (tok.type == (expTyp=TOK_INT_LIT)  ) ||
-                (tok.type == (expTyp=TOK_FLOAT_LIT)) ||
-                (tok.type == (expTyp=TOK_CHAR_LIT) );
+    shared_ptr<ASTNode> new_node;
+
+    switch (tok.type) {
+        case TOK_BOOL_LIT:  new_node = make_shared<ASTNode>(AST_BOOL_LIT);  break;
+        case TOK_INT_LIT:   new_node = make_shared<ASTNode>(AST_INT_LIT);   break;
+        case TOK_CHAR_LIT:  new_node = make_shared<ASTNode>(AST_CHAR_LIT);  break;
+        case TOK_FLOAT_LIT: new_node = make_shared<ASTNode>(AST_FLOAT_LIT); break;
+
+        default: return false;
+    }
     
     new_node->attr = tok.lexeme;
     new_node->token = tok;
     node->add_child(new_node);
 
-    return expr;
+    return true;
 }
 bool Parser::parseType(shared_ptr<ASTNode> node) {
 
