@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lexer.hpp"
+#include "ASTNode.hpp"
 #include <string>
 #include <map>
 #include <vector>
@@ -37,6 +38,7 @@ typedef struct symbolFunc_ {
     return_type type;
     int params;
     Token token;
+    shared_ptr<ASTNode> block;
 } symbolFunc;
 
 
@@ -46,11 +48,12 @@ class ScopeStk {
     public:
         ScopeStk();
 
-        map<string,symbol> getTop();
+        map<string,symbol>& getTop();
         map<string,symbol> pop();
         void push(map<string,symbol> value);
 
-        int isDecl(string id);
+        symbol getSymbol(string id);
+        void updateSymbol(string id, value v);
         int isFuncDecl(string id);
         
 
@@ -63,8 +66,9 @@ class ScopeStk {
         int errExpectedParams;
         int errActualParams;
 
-        void addFunction(string id, int params, return_type type_to_return, Token token);
+        void addFunction(string id, int params, return_type type_to_return, Token token, shared_ptr<ASTNode> block);
         void addSymbol(string id, identifier_type typ, value val, Token token);
+        void delSymbol(string id);
 
     private:
         vector<map<string,symbol>> scopeStk;

@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_03.rs";
+    string filename = "programs/program_02.rs";
     string xml_filename = "xml/xml_01.xml";
 
     string text;
@@ -50,6 +50,12 @@ int main(int argc, char* argv[]) {
     if (!semanticVisitor.analyse(rootNode)) {
         exit(EXIT_FAILURE);
     }
+
+    InterpreterVisitor iVisitor;
+
+    iVisitor.visit(rootNode);
+
+
     
 
     return 0;

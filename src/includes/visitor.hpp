@@ -53,15 +53,11 @@ class InterpreterVisitor: public Visitor {
         value evaluate(shared_ptr<ASTNode> node);
         identifier_type implicitTypeCast(value x, value y);
 
-        // bool visitFuncDecl(shared_ptr<ASTNode> node);
+        
 
 
     private:
-        // bool visitChildren(shared_ptr<ASTNode> node);
-        // identifier_type getIdentifierType(string typ);
-        // return_type getReturnType(string lexeme);
-        // bool blockReturns(shared_ptr<ASTNode> block);
-        // void printError();
+        float stringToFloat(string s);
 
         ScopeStk scopeStk;
 };

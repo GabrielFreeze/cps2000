@@ -1,26 +1,161 @@
 <PROGRAM>
 	<BLOCK>
-		<VAR_DECL i>
-			<IDENTIFIER i> i </IDENTIFIER>
-			<TYPE float> </TYPE>
+		<VAR_DECL a>
+			<IDENTIFIER a> a </IDENTIFIER>
+			<TYPE int> </TYPE>
 			<EXPR>
 				<SIMPLE_EXPR>
 					<TERM>
 						<FACTOR>
-							<UNOP -> - 								<EXPR>
-									<SIMPLE_EXPR>
-										<TERM>
-											<FACTOR>
-												<INT_LIT 4> </INT_LIT>
-											</FACTOR>
-										</TERM>
-									</SIMPLE_EXPR>
-								</EXPR>
-							</UNOP>
+							<INT_LIT 0> </INT_LIT>
 						</FACTOR>
 					</TERM>
 				</SIMPLE_EXPR>
 			</EXPR>
 		</VAR_DECL>
+		<VAR_DECL b>
+			<IDENTIFIER b> b </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<INT_LIT 1> </INT_LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL c>
+			<IDENTIFIER c> c </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<INT_LIT 0> </INT_LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL n>
+			<IDENTIFIER n> n </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<INT_LIT 10> </INT_LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL i>
+			<IDENTIFIER i> i </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<INT_LIT 0> </INT_LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<FOR_STMT>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<IDENTIFIER i> i </IDENTIFIER>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+				<RELOP <> </RELOP>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<IDENTIFIER n> n </IDENTIFIER>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+			<ASSIGN>
+				<IDENTIFIER i> i </IDENTIFIER>
+				<EXPR>
+					<SIMPLE_EXPR>
+						<TERM>
+							<FACTOR>
+								<IDENTIFIER i> i </IDENTIFIER>
+							</FACTOR>
+						</TERM>
+						<ADDOP +> + </ADDOP>
+						<TERM>
+							<FACTOR>
+								<INT_LIT 1> </INT_LIT>
+							</FACTOR>
+						</TERM>
+					</SIMPLE_EXPR>
+				</EXPR>
+			</ASSIGN>
+			<BLOCK>
+				<ASSIGN>
+					<IDENTIFIER c> c </IDENTIFIER>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER b> b </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</ASSIGN>
+				<ASSIGN>
+					<IDENTIFIER b> b </IDENTIFIER>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER a> a </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+							<ADDOP +> + </ADDOP>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER b> b </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</ASSIGN>
+				<ASSIGN>
+					<IDENTIFIER a> a </IDENTIFIER>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER c> c </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</ASSIGN>
+			</BLOCK>
+		</FOR_STMT>
+		<PRINT_STMT>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<IDENTIFIER a> a </IDENTIFIER>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</PRINT_STMT>
 	</BLOCK>
 </PROGRAM>

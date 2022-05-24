@@ -209,7 +209,7 @@ bool SemanticVisitor::visitFuncDecl(shared_ptr<ASTNode> node) {
             int param_num = params_node? params_node->children.size():0;
 
             // Add function to map of function declarations
-            scopeStk.addFunction(identifier_node->attr, param_num, getReturnType(return_node->attr), node->token);   
+            scopeStk.addFunction(identifier_node->attr, param_num, getReturnType(return_node->attr), node->token, {});   
         } break;
 
         default: {
@@ -334,9 +334,13 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
         //Order is important. FuncCall must be before Identfier because FuncCall ⊆ Identifier.
         case AST_FUNC_CALL: {
-
+            
             auto identifier_node    = node->children[0];
-            auto actual_params_node = node->children[1];
+            int param_num = 0;
+
+            if (node->children.size() != 1) {
+                param_num = node->children[1]->children.size();
+            }
 
             //Assert function exists
             if (!scopeStk.isFuncDecl(identifier_node->attr)) {
@@ -349,7 +353,7 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             //Assert function has same number of parameters as declaration.
             auto func = scopeStk.getFuncAttr(identifier_node->attr);
             scopeStk.errExpectedParams = func.params;
-            scopeStk.errActualParams = actual_params_node->children.size();
+            scopeStk.errActualParams = param_num;
 
             if (scopeStk.errExpectedParams != scopeStk.errActualParams) {
                 scopeStk.errMsg    = SEMERR_FUNC_CALL_WRONG_PARAM;
@@ -359,7 +363,9 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
                 return false;
             }
 
-            visit(actual_params_node);
+            if (param_num && !visitChildren(node->children[1])) {
+                return false;
+            }
 
         } break;
 
@@ -367,7 +373,7 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
         case AST_IDENTIFIER: {
             
             //Check if this variable has been declared before
-            if (!scopeStk.isDecl(node->attr)) {
+            if (scopeStk.getSymbol(node->attr).type == ID_EMPTY) {
                 scopeStk.errMsg = SEMERR_ID_NOT_DECLARED;
                 scopeStk.errToken = node->token;
 
@@ -404,6 +410,20 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 }
 
 InterpreterVisitor::InterpreterVisitor() {}
+float InterpreterVisitor::stringToFloat(string s) {
+    
+    //Boolean
+    if (s == "true")  return 1;
+    if (s == "false") return 0;
+
+    //Char
+    if (s[0] == '\'') return (float) s[1];
+
+    //Int or Float
+    return stof(s);
+}
+
+
 bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
     auto current_scope = scopeStk.getTop();
 
@@ -425,6 +445,8 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
             //Pop scope
             scopeStk.pop();
+            return true;
+
         } break;
 
         case AST_VAR_DECL: {
@@ -433,13 +455,28 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             auto type_node       = node->children[1];
             auto expression_node = node->children[2];
 
-
             //Evaluate expression
             auto v = evaluate(expression_node);
+            v.type = getIdentifierType(type_node->attr);
+            
             
             //If variable declaration is valid, add variable to symbol table
-            scopeStk.addSymbol(identifier_node->attr, getIdentifierType(type_node->attr),v,identifier_node->token);
-        
+            scopeStk.addSymbol(identifier_node->attr, v.type ,v,identifier_node->token);
+            return true;
+
+        } break;
+
+        case AST_ASSIGN: {
+            
+            //Find variable in symbol table and update value.
+            auto identifier_node = node->children[0];
+            auto expression_node = node->children[1];
+
+            //Update value
+            scopeStk.updateSymbol(identifier_node->attr, evaluate(expression_node));
+            
+            return true;
+
         } break;
 
         case AST_FUNC_DECL: {
@@ -447,18 +484,72 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             return true;
         } break;
 
-        //This case is only entered when the identifier is a variable being evaluated as an expression (not as a function call/decl)
-        case AST_IDENTIFIER: {
+        case AST_PRINT_STMT: {
+            auto v = evaluate(node->children[0]);
             
+            switch (v.type) {
+                case ID_BOOL:  {cout << (v.data? "TRUE":"FALSE");} break;
+                case ID_CHAR:  {cout << (char) v.data;} break;
+                case ID_INT:   {cout << (int)  v.data;} break;
+                case ID_FLOAT: {cout << v.data;} break;
+            }
 
-        } break;
-
-        case AST_EXPR: {
-
-
-
+            return true;
         } break;
         
+        case AST_IF_STMT: {
+
+            if (evaluate(node->children[0]).data) {
+                visit(node->children[1]);
+            } else if (node->children.size() == 3) {
+                visit(node->children[2]);
+            }
+            
+            return true;
+        } break;
+
+        case AST_FOR_STMT: {
+            
+            shared_ptr<ASTNode> identifier_node = nullptr;
+            shared_ptr<ASTNode> expression_node = nullptr;
+            shared_ptr<ASTNode> increment_node  = nullptr;
+            shared_ptr<ASTNode> block_node      = nullptr;
+
+            bool has_id = false;
+            //Push new scope
+            scopeStk.push(map<string,symbol>());
+
+            //Attempt to add initial variable declaration to block
+            if (node->children[0]->type == AST_VAR_DECL) {
+                identifier_node = node->children[0]->children[0];
+                expression_node = node->children[1];
+                visit(node->children[0]);
+                has_id = true;
+            } else {
+                expression_node = node->children[0];
+            }
+            
+            
+            if (node->children[1+has_id]->type == AST_ASSIGN) {
+                increment_node = node->children[1+has_id];
+                block_node     = node->children[2+has_id];
+            } else {
+                block_node = node->children[1+has_id];
+            }
+        
+
+            // While the condition is true
+            while (evaluate(expression_node).data) {
+                visit(block_node);     //Run block
+                visit(increment_node); //Run increment
+            }
+
+            //Remove initial variable declaration
+            if (identifier_node) {
+                scopeStk.pop(); //Pop scope
+            }
+        } break;
+
 
 
         default: {
@@ -470,22 +561,13 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
     return true;
 }
 
+
 value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
 
     switch(node->type) {
 
         case AST_IDENTIFIER: {
-            
-
-            //TODO: CHECK ALL SCOPES; START FROM TOP AND GO TO BOTTOM.
-            //Return value from symbol table. Must check all scopes.
-            auto current_scope = scopeStk.getTop();
-
-            auto symbol_it = find_if(current_scope.begin(), current_scope.end(), [&node] (pair<string,symbol> p) {
-                return p.first == node->attr;
-            });
-
-            return (*symbol_it).second.val;
+            return scopeStk.getSymbol(node->attr).val;
         }
 
         case AST_EXPR: {
@@ -507,9 +589,11 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                 if (relop->attr[0] == '>')
                     if (relop->attr.size() != 1) v.data = v.data >= u.data;
                     else                         v.data = v.data > u.data;
-                else
+                else if (relop->attr[0] == '<')
                     if (relop->attr.size() != 1) v.data = v.data <= u.data;
-                    else                         v.data = v.data < u.data;             
+                    else                         v.data = v.data < u.data;
+                else if (relop->attr[0] == '!')  v.data = v.data != u.data;
+                     else                        v.data = v.data == u.data;
 
                 //Return type is strictly bool after relational operator.
                 v.type = ID_BOOL;
@@ -531,6 +615,8 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                 auto addop = node->children[i];
                 auto u     = evaluate(node->children[i+1]);
 
+                v.type = max(v.type, u.type);
+
                 //Evaluate addition operation.
                 if (addop->attr == "+") {
                     v.data += u.data;
@@ -547,7 +633,6 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
             return v;
         } break;
 
-
         case AST_TERM: {
             auto v = evaluate(node->children[0]);
 
@@ -560,6 +645,8 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                 
                 auto mulop = node->children[i];
                 auto u     = evaluate(node->children[i+1]);
+
+                v.type = max(v.type, u.type);
 
                 //Evaluate addition operation.
                 if (mulop->attr == "*") {
@@ -578,13 +665,13 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
 
         case AST_FACTOR: {
             
-            auto child = node->children[0];
+            auto child = node->children[0];            
 
             switch (child->type) {
-                case AST_BOOL_LIT:   return {stof(child->attr), ID_BOOL };
-                case AST_CHAR_LIT:   return {stof(child->attr), ID_CHAR };
-                case AST_INT_LIT:    return {stof(child->attr), ID_INT  };
-                case AST_FLOAT_LIT:  return {stof(child->attr), ID_FLOAT};
+                case AST_BOOL_LIT:   return {stringToFloat(child->attr), ID_BOOL };
+                case AST_CHAR_LIT:   return {stringToFloat(child->attr), ID_CHAR };
+                case AST_INT_LIT:    return {stringToFloat(child->attr), ID_INT  };
+                case AST_FLOAT_LIT:  return {stringToFloat(child->attr), ID_FLOAT};
                 
                 case AST_UNOP: {
                     
@@ -627,9 +714,6 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
             }
         
         } break;
-
-
-
 
     }
 
