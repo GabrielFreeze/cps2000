@@ -529,19 +529,18 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
                 expression_node = node->children[0];
             }
             
-            
+            //Attempt to get increment assignment
             if (node->children[1+has_id]->type == AST_ASSIGN) {
                 increment_node = node->children[1+has_id];
                 block_node     = node->children[2+has_id];
             } else {
                 block_node = node->children[1+has_id];
             }
-        
 
             // While the condition is true
             while (evaluate(expression_node).data) {
                 visit(block_node);     //Run block
-                visit(increment_node); //Run increment
+                if (increment_node) visit(increment_node); //Run increment
             }
 
             //Remove initial variable declaration
@@ -549,8 +548,6 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
                 scopeStk.pop(); //Pop scope
             }
         } break;
-
-
 
         default: {
             if(!visitChildren(node))

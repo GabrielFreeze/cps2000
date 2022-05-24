@@ -83,24 +83,6 @@
 					</TERM>
 				</SIMPLE_EXPR>
 			</EXPR>
-			<ASSIGN>
-				<IDENTIFIER i> i </IDENTIFIER>
-				<EXPR>
-					<SIMPLE_EXPR>
-						<TERM>
-							<FACTOR>
-								<IDENTIFIER i> i </IDENTIFIER>
-							</FACTOR>
-						</TERM>
-						<ADDOP +> + </ADDOP>
-						<TERM>
-							<FACTOR>
-								<INT_LIT 1> </INT_LIT>
-							</FACTOR>
-						</TERM>
-					</SIMPLE_EXPR>
-				</EXPR>
-			</ASSIGN>
 			<BLOCK>
 				<ASSIGN>
 					<IDENTIFIER c> c </IDENTIFIER>
@@ -139,6 +121,24 @@
 							<TERM>
 								<FACTOR>
 									<IDENTIFIER c> c </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</ASSIGN>
+				<ASSIGN>
+					<IDENTIFIER i> i </IDENTIFIER>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER i> i </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+							<ADDOP +> + </ADDOP>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 1> </INT_LIT>
 								</FACTOR>
 							</TERM>
 						</SIMPLE_EXPR>
