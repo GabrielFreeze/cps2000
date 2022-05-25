@@ -8,8 +8,16 @@ void ScopeStk::push(map<string, symbol> value) {
     scopeStk.push_back(value);
 }
 map<string, symbol> ScopeStk::pop() {
+
     auto scope = getTop();
+    
+    // cout << "Removing: \n";
+
+    // for (auto const& [key, val] : scope) {
+    //         cout << ">" << key << '\n';
+    // }
     scopeStk.pop_back();
+    
     return scope;
 }
 
@@ -21,11 +29,22 @@ symbolFunc ScopeStk::getFuncAttr(string id) {
 int ScopeStk::isFuncDecl(string id) {
     return functions.count(id);
 }
-void ScopeStk::addFunction(string id, int params, return_type type_to_return, Token token, shared_ptr<ASTNode> block) {
-    functions.insert(pair<string,symbolFunc>(id,{id,type_to_return,params,token}));   
+void ScopeStk::addFunction(string id, return_type type_to_return, Token token, shared_ptr<ASTNode> params, shared_ptr<ASTNode> block) {
+    functions.insert(pair<string,symbolFunc>(id,{id,type_to_return,token,params,block}));   
 }
 
 
+void ScopeStk::printSymbols() {
+    cout << "Symbols: \n";
+    for (auto scope : scopeStk) {
+        for (auto const& [key, val] : scope) {
+            cout << ">" << key << '\n';
+        }
+
+        cout << '\n';
+
+    }
+}
 
 symbol ScopeStk::getSymbol(string id) {
     
@@ -49,11 +68,13 @@ symbol ScopeStk::getSymbol(string id) {
 
 void ScopeStk::updateSymbol(string id, value v) {
     
-    for (auto& scope : scopeStk) {
-        
+    for (int i = scopeStk.size()-1; i >= 0; i--) {
+        auto& scope = scopeStk[i];
+
         auto symbol_it = scope.find(id);
 
         if (symbol_it != scope.end()) {
+
             symbol_it->second.val = v;
             return;
         }
@@ -70,6 +91,9 @@ map<string, symbol>& ScopeStk::getTop() {
     return scopeStk[scopeStk.size()-1];
 }
 
+void ScopeStk::addSymbol(symbol s) {
+    addSymbol(s.identifier, s.type, s.val, s.token);
+}
 
 void ScopeStk::addSymbol(string id, identifier_type type, value val, Token token) {
     scopeStk[scopeStk.size()-1].insert(pair<string,symbol>(id, {id,type,val,token}));    

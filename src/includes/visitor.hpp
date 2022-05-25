@@ -50,6 +50,9 @@ class InterpreterVisitor: public Visitor {
     public: 
         InterpreterVisitor();
         virtual bool visit(shared_ptr<ASTNode> node, int depth=0);
+        bool visitFuncDecl(shared_ptr<ASTNode> node);
+
+
         value evaluate(shared_ptr<ASTNode> node);
         identifier_type implicitTypeCast(value x, value y);
 

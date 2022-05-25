@@ -36,8 +36,8 @@ typedef struct symbol_ {
 typedef struct symbolFunc_ {
     string identifier;
     return_type type;
-    int params;
     Token token;
+    shared_ptr<ASTNode> params;
     shared_ptr<ASTNode> block;
 } symbolFunc;
 
@@ -55,6 +55,10 @@ class ScopeStk {
         symbol getSymbol(string id);
         void updateSymbol(string id, value v);
         int isFuncDecl(string id);
+
+        value return_value;
+
+        void printSymbols();
         
 
         symbolFunc getFuncAttr(string id);
@@ -66,7 +70,8 @@ class ScopeStk {
         int errExpectedParams;
         int errActualParams;
 
-        void addFunction(string id, int params, return_type type_to_return, Token token, shared_ptr<ASTNode> block);
+        void addFunction(string id, return_type type_to_return, Token token, shared_ptr<ASTNode> params, shared_ptr<ASTNode> block);
+        void addSymbol(symbol s);
         void addSymbol(string id, identifier_type typ, value val, Token token);
         void delSymbol(string id);
 
