@@ -6,20 +6,31 @@ ASTNode::ASTNode(node_type type) {
 }
 
 void ASTNode::add_child(shared_ptr<ASTNode> node) {
-    // node->parent = shared_from_this();
+    node->parent = shared_from_this();
     children.push_back(node);
 }
 
-bool ASTNode::isParentOf(node_type child_type, string attr) {
+shared_ptr<ASTNode> ASTNode::isChildOf(node_type type) {
+    
+    if (parent->type == AST_PROGRAM)
+        return nullptr;
+    
+    if (parent->type == type)
+        return parent;
+    
+    return parent->isChildOf(type);
+    
+}
+
+shared_ptr<ASTNode> ASTNode::isParentOf(node_type type) {
     for (auto c : children) {
+        if (c->type == type)
+            return c;
         
-        if ((c->type == child_type) && (c->attr == attr))
-            return true;
-        else
-            c->isParentOf(child_type,attr);
+        return c->isParentOf(type);
     }
 
-    return false;
+    return nullptr;
 }
 
 

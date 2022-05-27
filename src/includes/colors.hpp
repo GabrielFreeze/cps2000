@@ -1,4 +1,4 @@
-#pragma oncee
+#pragma once
 
 #define ANSI_BLK "\e[0;30m"
 #define ANSI_RED "\e[0;31m"

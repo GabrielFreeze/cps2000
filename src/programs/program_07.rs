@@ -41,7 +41,3 @@ fn AverageOfThree(x:float, y:float, z:float) -> float {
  print XGreaterY_2(Sq(1.5), y);         //false
  print AverageOfThree(x, y, 1.2);       //3.28
 print AverageOfThree_2(x, y, 1.2);      //3.28
- 
-
-
-

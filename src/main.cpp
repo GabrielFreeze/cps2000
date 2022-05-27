@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <filesystem>
+
 #include "includes/lexer.hpp"
 #include "includes/parser.hpp"
 #include "includes/visitor.hpp"
@@ -13,11 +15,16 @@ void print_program(string& text);
 
 int main(int argc, char* argv[]) {
     
+    string filename;
+
+
+    if (argc != 1) {
+        filename = string(filesystem::current_path()) + "/" +string(argv[1]);
+    } else filename = "programs/program_01.rs";
 
     Lexer lexer;
 
     string line;
-    string filename = "programs/program_07.rs";
     string xml_filename = "xml/xml_01.xml";
 
     string text;
@@ -27,10 +34,8 @@ int main(int argc, char* argv[]) {
 
     vector<Token> tokens = lexer.getTokens(text);
 
-
-
-    // lexer.printToken(tokens);
-    // cout << '\n';
+    lexer.printToken(tokens);
+    cout << '\n';
 
     shared_ptr<ASTNode> rootNode;
     Parser parser(tokens);

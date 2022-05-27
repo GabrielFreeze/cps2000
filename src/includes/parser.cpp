@@ -543,6 +543,8 @@ bool Parser::parseUnOp(shared_ptr<ASTNode> node) {
                  (tok.type == (expTyp=TOK_UNOP)                     )) &&
                  (parseExpr(new_node)                                );
 
+    //ATTACHING WHOLE EXPRESSION TO UNOP?? SHOULD ONLY ATTACH IMMEDIATE TOKEN
+
     new_node->attr = tok.lexeme;
     new_node->token = tok;
     node->add_child(new_node);

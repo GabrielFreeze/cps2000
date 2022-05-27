@@ -29,7 +29,7 @@ symbolFunc ScopeStk::getFuncAttr(string id) {
 int ScopeStk::isFuncDecl(string id) {
     return functions.count(id);
 }
-void ScopeStk::addFunction(string id, return_type type_to_return, Token token, shared_ptr<ASTNode> params, shared_ptr<ASTNode> block) {
+void ScopeStk::addFunction(string id, identifier_type type_to_return, Token token, shared_ptr<ASTNode> params, shared_ptr<ASTNode> block) {
     functions.insert(pair<string,symbolFunc>(id,{id,type_to_return,token,params,block}));   
 }
 

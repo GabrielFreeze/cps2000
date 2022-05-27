@@ -27,6 +27,7 @@ class ASTNode: public enable_shared_from_this<ASTNode>{
 
         ASTNode(node_type type);
         void add_child(shared_ptr<ASTNode> node);
-        bool isParentOf(node_type child_type, string attr);
+        shared_ptr<ASTNode> isParentOf(node_type type);
+        shared_ptr<ASTNode> isChildOf(node_type type);
 
 };

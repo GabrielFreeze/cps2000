@@ -23,8 +23,7 @@ bool XMLVisitor::visit (shared_ptr<ASTNode> node, int depth) {
     outfile << "<"+map[node->type]+(node->attr.empty()? "":" ")+node->attr+">";
     
     if (node->type == AST_IDENTIFIER || node->type == AST_MULOP ||
-        node->type == AST_ADDOP      || node->type == AST_UNOP  ||
-        node->type == AST_LIT) {
+        node->type == AST_ADDOP      || node->type == AST_LIT) {
         outfile << " "+node->attr+" ";
     } else {
         if (!node->children.empty()) {
@@ -123,13 +122,12 @@ bool SemanticVisitor::exprIsChar(shared_ptr<ASTNode> node) {
             return p.first == identifier_node->attr;
         });
 
-        return ((*func_it).second.type == RETURN_CHAR);
+        return ((*func_it).second.type == ID_CHAR);
     }
     
     return v->type == AST_CHAR_LIT;
 
 }
-
 
 void SemanticVisitor::printError() {
     
@@ -146,6 +144,8 @@ void SemanticVisitor::printError() {
     switch (i) {
         case SEMERR_FUNC_DECL_ALREADY_DECLARED:   {msg << ANSI_RED << "Multiple definitons of " << ANSI_YEL << lex << ANSI_RED << " found";} break;
         case SEMERR_FUNC_DECL_NO_RETURN:          {msg << ANSI_RED << "Function " << ANSI_YEL << lex << ANSI_RED << " does not guarantee return";} break;
+        case SEMERR_FUNC_DECL_NESTED_DECLARATION: {msg << ANSI_RED << "Function declaration " << ANSI_YEL << lex << ANSI_RED << " is nested in function declaration "
+                                                       << ANSI_YEL << corrTok.lexeme << ANSI_RED << " at [" << ANSI_YEL << corrTok.ln << ANSI_RED << "," << ANSI_YEL << corrTok.col << ANSI_RED << "]";} break;
         case SEMERR_VAR_DECL_ALREADY_DECLARED:    {msg << ANSI_RED << "Variable " << ANSI_YEL << lex << ANSI_RED << " has already been declared at ["
                                                        << ANSI_YEL << corrTok.ln << ANSI_RED << "," << ANSI_YEL << corrTok.col << ANSI_RED << "]";} break;
         case SEMERR_VAR_DECL_IDENTICAL_FUNCTION:  {msg << ANSI_RED << "Variable " << ANSI_YEL << lex << ANSI_RED << " shares name with function declared at ["
@@ -157,6 +157,7 @@ void SemanticVisitor::printError() {
                                                        << ANSI_RED << "] expects " << exp << " parameters but " << act << " were given";} break;
         case SEMERR_TYPE_INVALID_CHAR_CONVERSION: {msg << ANSI_RED << "Variable assignment of " << ANSI_YEL << lex << ANSI_RED << " of type" << ANSI_YEL << " char " 
                                                        << ANSI_RED <<"does not guarantee a char value";} break;
+        case SEMERR_RETURN_NO_FUNCTION:            {msg << ANSI_RED << "Return statement outside function declaration";} break;                                               
     }
 
 
@@ -173,48 +174,53 @@ bool SemanticVisitor::analyseFuncDecl(shared_ptr<ASTNode> root_node) {
     return true;
 }
 bool SemanticVisitor::visitFuncDecl(shared_ptr<ASTNode> node) {
-    switch (node->type) {
+   
+    if (node->type == AST_FUNC_DECL){
+        auto identifier_node = node->children[0];
+        scopeStk.errToken = identifier_node->token;
+        
 
-        case AST_FUNC_DECL: {
-            auto identifier_node = node->children[0];
-            scopeStk.errToken = identifier_node->token;
+        shared_ptr<ASTNode> return_node, block_node, params_node;
+        params_node = nullptr;
+
+        //Determine if the function declaration has parameters.
+        if (node->children.size() == 3) {
+            return_node = node->children[1];
+            block_node  = node->children[2];
+        } else {
+            params_node = node->children[1];
+            return_node = node->children[2];
+            block_node  = node->children[3];
+        }
+
+        // Assert that the function is not already declared
+        if (scopeStk.isFuncDecl(identifier_node->attr)) {
+            scopeStk.errMsg = SEMERR_FUNC_DECL_ALREADY_DECLARED;
+            return false;
+        }
+
+        // Assert that the function returns an expression
+        if (!blockReturns(block_node)) {
+            scopeStk.errMsg = SEMERR_FUNC_DECL_NO_RETURN;
+            return false;
+        }
             
+        //Assert that the function is not declared in another function declaration
+        shared_ptr<ASTNode> nested_func_decl = nullptr;
 
-            shared_ptr<ASTNode> return_node, block_node, params_node;
-            params_node = nullptr;
-
-            //Determine if the function declaration has parameters.
-            if (node->children.size() == 3) {
-                return_node = node->children[1];
-                block_node  = node->children[2];
-            } else {
-                params_node = node->children[1];
-                return_node = node->children[2];
-                block_node  = node->children[3];
-            }
-
-            // Assert that the function is not already declared
-            if (scopeStk.isFuncDecl(identifier_node->attr)) {
-                scopeStk.errMsg = SEMERR_FUNC_DECL_ALREADY_DECLARED;
-                return false;
-            }
-
-            // Assert that the function returns an expression
-            if (!blockReturns(block_node)) {
-                scopeStk.errMsg = SEMERR_FUNC_DECL_NO_RETURN;
-                return false;
-            }
-                 
-            // Add function to map of function declarations
-            scopeStk.addFunction(identifier_node->attr, getReturnType(return_node->attr), node->token, params_node, {});   
-        } break;
-
-        default: {
-            for (auto c : node->children) {
-                if (!visitFuncDecl(c)) {
-                    return false;
-                }
-            }
+        if (nested_func_decl = node->isChildOf(AST_FUNC_DECL)) {
+            scopeStk.corrToken = nested_func_decl->token;
+            scopeStk.errMsg = SEMERR_FUNC_DECL_NESTED_DECLARATION;
+            return false;
+        }
+        
+        // Add function to map of function declarations
+        scopeStk.addFunction(identifier_node->attr, getIdentifierType(return_node->attr), node->token, params_node, {});   
+    }
+        
+    for (auto c : node->children) {
+        if (!visitFuncDecl(c)) {
+            return false;
         }
     }
 
@@ -237,7 +243,6 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
         case AST_PROGRAM: {
             if (!visitChildren(node)) {
-                //Print error message
                 return false;
             }
         } break;
@@ -246,11 +251,13 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             //Push new scope
             scopeStk.push(map<string,symbol>());
             
-            if (!visitChildren(node))
-                return false;
-
+            //Run block
+            bool eval = visitChildren(node);
+            
             //Pop scope
             scopeStk.pop();
+
+            return eval;
         } break;
 
         case AST_VAR_DECL: {
@@ -258,6 +265,11 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             auto identifier_node = node->children[0];
             auto type_node       = node->children[1];
             auto expression_node = node->children[2];
+
+            //Evaluate expression and type
+            if (!visit(expression_node) || !visit(type_node)) {
+                return false;
+            }
 
             //Check if a variable with the same name is already declared in the current scope.
             auto symbol_it = find_if(current_scope.begin(), current_scope.end(), [&identifier_node] (pair<string,symbol> p) {
@@ -292,6 +304,9 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
                 return false;
             }
+
+
+
 
             //If variable declaration is valid, add variable to symbol table
             scopeStk.addSymbol(identifier_node->attr, getIdentifierType(type_node->attr),{},identifier_node->token);
@@ -382,7 +397,6 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
                 return p.first == node->attr;
             });
 
-
             if (func_it != scopeStk.functions.end()) {
                 scopeStk.errMsg = SEMERR_VAR_DECL_IDENTICAL_FUNCTION;
                 scopeStk.errToken = node->token;
@@ -407,6 +421,16 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
         } break;
 
+        case AST_RETURN_STMT: {
+            
+            //If return statement is not a child of a function declaration, raise error.
+            if (!node->isChildOf(AST_FUNC_DECL)) {
+                scopeStk.errToken = node->token;
+                scopeStk.errMsg = SEMERR_RETURN_NO_FUNCTION;
+                return false;
+            }
+
+        } break;
 
         default: {
             if(!visitChildren(node))
@@ -432,7 +456,6 @@ float InterpreterVisitor::stringToFloat(string s) {
     return stof(s);
 }
 
-
 bool InterpreterVisitor::visitFuncDecl(shared_ptr<ASTNode> node) {
 
     switch (node->type) {
@@ -454,7 +477,7 @@ bool InterpreterVisitor::visitFuncDecl(shared_ptr<ASTNode> node) {
             }
             
             // Add function to map of function declarations
-            scopeStk.addFunction(identifier_node->attr, getReturnType(return_node->attr), node->token, params_node, block_node);   
+            scopeStk.addFunction(identifier_node->attr, getIdentifierType(return_node->attr), node->token, params_node, block_node);   
 
         } break;
 
@@ -487,13 +510,13 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
         case AST_BLOCK: {
             //Push new scope
             scopeStk.push(map<string,symbol>());
-            
-            if (!visitChildren(node))
-                return false;
+
+            //Run block.
+            bool eval = visitChildren(node);
 
             //Pop scope
             scopeStk.pop();
-            return true;
+            return eval;
 
         } break;
 
@@ -506,7 +529,6 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             //Evaluate expression
             auto v = evaluate(expression_node);
             v.type = getIdentifierType(type_node->attr);
-            
             
             //If variable declaration is valid, add variable to symbol table
             scopeStk.addSymbol(identifier_node->attr, v.type ,v,identifier_node->token);
@@ -536,10 +558,10 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
         case AST_PRINT_STMT: {
             auto v = evaluate(node->children[0]);
             switch (v.type) {
-                case ID_BOOL:  {cout << (v.data? "TRUE\n":"FALSE\n");} break;
-                case ID_CHAR:  {cout << (char) v.data << "\n";} break;
-                case ID_INT:   {cout << (int)  v.data << '\n';} break;
-                case ID_FLOAT: {cout << v.data << '\n';} break;
+                case ID_BOOL:  {cout << (v.data? "TRUE":"FALSE");} break;
+                case ID_CHAR:  {cout << (char) v.data;} break;
+                case ID_INT:   {cout << (int)  v.data;} break;
+                case ID_FLOAT: {cout << v.data;} break;
             }
 
             return true;
@@ -595,7 +617,7 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
                 //Run block
                 if (!visit(block_node)) {
-                    if (identifier_node) scopeStk.pop(); 
+                    scopeStk.pop(); 
                     return false;
                 }
 
@@ -603,9 +625,8 @@ bool InterpreterVisitor::visit(shared_ptr<ASTNode> node, int depth) {
             }
 
             //Remove initial variable declaration
-            if (identifier_node) {
-                scopeStk.pop(); //Pop scope
-            }
+            scopeStk.pop(); //Pop scope
+            
         } break;
 
         case AST_WHILE_STMT: {
@@ -653,7 +674,6 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
         //This block is strictly a function block.
         case AST_BLOCK: {
             visit(node);
-            scopeStk.pop();
             return scopeStk.return_value;
         } break;
 
@@ -671,6 +691,7 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                 auto relop = node->children[i];
                 auto u     = evaluate(node->children[i+1]);
 
+                cout << v.data << ' ' << u.data << '\n';
 
                 //Evaluate relation operation.
                 if (relop->attr[0] == '>')
@@ -764,6 +785,7 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                     auto u = evaluate(child->children[0]);
 
                     if (child->attr == "-") {    
+
                         u.data = -u.data;
                     } else {
                         u.data = ~ (int) u.data;
@@ -788,14 +810,11 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                     scopeStk.push(map<string,symbol>()); 
 
                     //Evaluate actual parameters and add them to scope
-
                     if (child->children.size() != 1) {
                         auto actual_params_node = child->children[1];
 
                         for (int i = 0; i < actual_params_node->children.size(); i++) {
                             
-                            //TODO: You are not adding the parameters to the function in the correct scope.
-
                             //Find parameter from function declaration.
                             auto param_node = func_it->second.params->children[i];
 
@@ -814,8 +833,10 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                     }
 
                     //Call function
-
                     auto v = evaluate(func_it->second.block);
+
+                    //Set return type to match that of function declaration
+                    v.type = func_it->second.type;
 
                     //Pop scope
                     scopeStk.pop(); 
@@ -839,11 +860,3 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
 
 
 }
-
-
-
-
-//TODO: MAKE '!' BE ACCEPTED AS CHARACTER
-//TODO: GENERAL BUG FINDING
-//ARA IL BARBALJATA LI HI IL PARAMETER PASSING GO SCOPES.
-//Semantic analysis: Do not allow functions to be used as variables
