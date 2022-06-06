@@ -11,11 +11,6 @@ map<string, symbol> ScopeStk::pop() {
 
     auto scope = getTop();
     
-    // cout << "Removing: \n";
-
-    // for (auto const& [key, val] : scope) {
-    //         cout << ">" << key << '\n';
-    // }
     scopeStk.pop_back();
     
     return scope;

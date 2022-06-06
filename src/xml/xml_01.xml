@@ -1,24 +1,704 @@
 <PROGRAM>
 	<BLOCK>
-		<PRINT_STMT>
-			<EXPR>
-				<SIMPLE_EXPR>
-					<TERM>
-						<FACTOR>
-							<UNOP ->
+		<FUNC_DECL getBit>
+			<IDENTIFIER getBit> getBit </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER n> n </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER k> k </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE bool> </TYPE>
+			<BLOCK>
+				<VAR_DECL i>
+					<IDENTIFIER i> i </IDENTIFIER>
+					<TYPE int> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 1> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<FOR_STMT>
+					<VAR_DECL j>
+						<IDENTIFIER j> j </IDENTIFIER>
+						<TYPE int> </TYPE>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 0> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</VAR_DECL>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER j> j </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP <> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER k> k </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<ASSIGN>
+						<IDENTIFIER j> j </IDENTIFIER>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<IDENTIFIER j> j </IDENTIFIER>
+									</FACTOR>
+								</TERM>
+								<ADDOP +> + </ADDOP>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 1> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</ASSIGN>
+					<BLOCK>
+						<ASSIGN>
+							<IDENTIFIER i> i </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER i> i </IDENTIFIER>
+										</FACTOR>
+										<MULOP *> * </MULOP>
+										<FACTOR>
+											<INT_LIT 2> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+					</BLOCK>
+				</FOR_STMT>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<SUB_EXPR>
+										<EXPR>
+											<SIMPLE_EXPR>
+												<TERM>
+													<FACTOR>
+														<IDENTIFIER n> n </IDENTIFIER>
+													</FACTOR>
+													<MULOP and> and </MULOP>
+													<FACTOR>
+														<IDENTIFIER i> i </IDENTIFIER>
+													</FACTOR>
+												</TERM>
+											</SIMPLE_EXPR>
+										</EXPR>
+									</SUB_EXPR>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP ==> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER i> i </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL SHR>
+			<IDENTIFIER SHR> SHR </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER n> n </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER k> k </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE int> </TYPE>
+			<BLOCK>
+				<VAR_DECL m>
+					<IDENTIFIER m> m </IDENTIFIER>
+					<TYPE int> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 0> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<VAR_DECL mask>
+					<IDENTIFIER mask> mask </IDENTIFIER>
+					<TYPE int> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 1073741824> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<FOR_STMT>
+					<VAR_DECL i>
+						<IDENTIFIER i> i </IDENTIFIER>
+						<TYPE int> </TYPE>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 0> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</VAR_DECL>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER i> i </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP <> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER k> k </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<ASSIGN>
+						<IDENTIFIER i> i </IDENTIFIER>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<IDENTIFIER i> i </IDENTIFIER>
+									</FACTOR>
+								</TERM>
+								<ADDOP +> + </ADDOP>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 1> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</ASSIGN>
+					<BLOCK>
+						<FOR_STMT>
+							<VAR_DECL j>
+								<IDENTIFIER j> j </IDENTIFIER>
+								<TYPE int> </TYPE>
 								<EXPR>
 									<SIMPLE_EXPR>
+										<TERM>
+											<FACTOR>
+												<INT_LIT 31> </INT_LIT>
+											</FACTOR>
+										</TERM>
+									</SIMPLE_EXPR>
+								</EXPR>
+							</VAR_DECL>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER j> j </IDENTIFIER>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+								<RELOP >=> </RELOP>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<INT_LIT 0> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+							<ASSIGN>
+								<IDENTIFIER j> j </IDENTIFIER>
+								<EXPR>
+									<SIMPLE_EXPR>
+										<TERM>
+											<FACTOR>
+												<IDENTIFIER j> j </IDENTIFIER>
+											</FACTOR>
+										</TERM>
+										<ADDOP -> - </ADDOP>
 										<TERM>
 											<FACTOR>
 												<INT_LIT 1> </INT_LIT>
 											</FACTOR>
 										</TERM>
 									</SIMPLE_EXPR>
-									<RELOP ==> </RELOP>
+								</EXPR>
+							</ASSIGN>
+							<BLOCK>
+								<ASSIGN>
+									<IDENTIFIER m> m </IDENTIFIER>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<IDENTIFIER m> m </IDENTIFIER>
+												</FACTOR>
+											</TERM>
+											<ADDOP or> or </ADDOP>
+											<TERM>
+												<FACTOR>
+													<SUB_EXPR>
+														<EXPR>
+															<SIMPLE_EXPR>
+																<TERM>
+																	<FACTOR>
+																		<FUNC_CALL>
+																			<IDENTIFIER getBit> getBit </IDENTIFIER>
+																			<ACTUAL_PARAMS>
+																				<EXPR>
+																					<SIMPLE_EXPR>
+																						<TERM>
+																							<FACTOR>
+																								<IDENTIFIER n> n </IDENTIFIER>
+																							</FACTOR>
+																						</TERM>
+																					</SIMPLE_EXPR>
+																				</EXPR>
+																				<EXPR>
+																					<SIMPLE_EXPR>
+																						<TERM>
+																							<FACTOR>
+																								<IDENTIFIER j> j </IDENTIFIER>
+																							</FACTOR>
+																						</TERM>
+																					</SIMPLE_EXPR>
+																				</EXPR>
+																			</ACTUAL_PARAMS>
+																		</FUNC_CALL>
+																	</FACTOR>
+																	<MULOP *> * </MULOP>
+																	<FACTOR>
+																		<IDENTIFIER mask> mask </IDENTIFIER>
+																	</FACTOR>
+																</TERM>
+															</SIMPLE_EXPR>
+														</EXPR>
+													</SUB_EXPR>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ASSIGN>
+								<ASSIGN>
+									<IDENTIFIER mask> mask </IDENTIFIER>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<IDENTIFIER mask> mask </IDENTIFIER>
+												</FACTOR>
+												<MULOP /> / </MULOP>
+												<FACTOR>
+													<INT_LIT 2> </INT_LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ASSIGN>
+							</BLOCK>
+						</FOR_STMT>
+						<ASSIGN>
+							<IDENTIFIER mask> mask </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<INT_LIT 1073741824> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+						<ASSIGN>
+							<IDENTIFIER n> n </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER m> m </IDENTIFIER>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+						<ASSIGN>
+							<IDENTIFIER m> m </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<INT_LIT 0> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+					</BLOCK>
+				</FOR_STMT>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER n> n </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL SHL>
+			<IDENTIFIER SHL> SHL </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER n> n </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER k> k </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE int> </TYPE>
+			<BLOCK>
+				<VAR_DECL m>
+					<IDENTIFIER m> m </IDENTIFIER>
+					<TYPE int> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 0> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<VAR_DECL mask>
+					<IDENTIFIER mask> mask </IDENTIFIER>
+					<TYPE int> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 2> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<FOR_STMT>
+					<VAR_DECL i>
+						<IDENTIFIER i> i </IDENTIFIER>
+						<TYPE int> </TYPE>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 0> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</VAR_DECL>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER i> i </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP <> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER k> k </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<ASSIGN>
+						<IDENTIFIER i> i </IDENTIFIER>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<IDENTIFIER i> i </IDENTIFIER>
+									</FACTOR>
+								</TERM>
+								<ADDOP +> + </ADDOP>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 1> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</ASSIGN>
+					<BLOCK>
+						<FOR_STMT>
+							<VAR_DECL j>
+								<IDENTIFIER j> j </IDENTIFIER>
+								<TYPE int> </TYPE>
+								<EXPR>
 									<SIMPLE_EXPR>
 										<TERM>
 											<FACTOR>
-												<UNOP ->
+												<INT_LIT 0> </INT_LIT>
+											</FACTOR>
+										</TERM>
+									</SIMPLE_EXPR>
+								</EXPR>
+							</VAR_DECL>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER j> j </IDENTIFIER>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+								<RELOP <=> </RELOP>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<INT_LIT 32> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+							<ASSIGN>
+								<IDENTIFIER j> j </IDENTIFIER>
+								<EXPR>
+									<SIMPLE_EXPR>
+										<TERM>
+											<FACTOR>
+												<IDENTIFIER j> j </IDENTIFIER>
+											</FACTOR>
+										</TERM>
+										<ADDOP +> + </ADDOP>
+										<TERM>
+											<FACTOR>
+												<INT_LIT 1> </INT_LIT>
+											</FACTOR>
+										</TERM>
+									</SIMPLE_EXPR>
+								</EXPR>
+							</ASSIGN>
+							<BLOCK>
+								<ASSIGN>
+									<IDENTIFIER m> m </IDENTIFIER>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<IDENTIFIER m> m </IDENTIFIER>
+												</FACTOR>
+											</TERM>
+											<ADDOP or> or </ADDOP>
+											<TERM>
+												<FACTOR>
+													<SUB_EXPR>
+														<EXPR>
+															<SIMPLE_EXPR>
+																<TERM>
+																	<FACTOR>
+																		<FUNC_CALL>
+																			<IDENTIFIER getBit> getBit </IDENTIFIER>
+																			<ACTUAL_PARAMS>
+																				<EXPR>
+																					<SIMPLE_EXPR>
+																						<TERM>
+																							<FACTOR>
+																								<IDENTIFIER n> n </IDENTIFIER>
+																							</FACTOR>
+																						</TERM>
+																					</SIMPLE_EXPR>
+																				</EXPR>
+																				<EXPR>
+																					<SIMPLE_EXPR>
+																						<TERM>
+																							<FACTOR>
+																								<IDENTIFIER j> j </IDENTIFIER>
+																							</FACTOR>
+																						</TERM>
+																					</SIMPLE_EXPR>
+																				</EXPR>
+																			</ACTUAL_PARAMS>
+																		</FUNC_CALL>
+																	</FACTOR>
+																	<MULOP *> * </MULOP>
+																	<FACTOR>
+																		<IDENTIFIER mask> mask </IDENTIFIER>
+																	</FACTOR>
+																</TERM>
+															</SIMPLE_EXPR>
+														</EXPR>
+													</SUB_EXPR>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ASSIGN>
+								<ASSIGN>
+									<IDENTIFIER mask> mask </IDENTIFIER>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<IDENTIFIER mask> mask </IDENTIFIER>
+												</FACTOR>
+												<MULOP *> * </MULOP>
+												<FACTOR>
+													<INT_LIT 2> </INT_LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ASSIGN>
+							</BLOCK>
+						</FOR_STMT>
+						<ASSIGN>
+							<IDENTIFIER mask> mask </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<INT_LIT 2> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+						<ASSIGN>
+							<IDENTIFIER n> n </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER m> m </IDENTIFIER>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+						<ASSIGN>
+							<IDENTIFIER m> m </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<INT_LIT 0> </INT_LIT>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+					</BLOCK>
+				</FOR_STMT>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER n> n </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL setBit>
+			<IDENTIFIER setBit> setBit </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER n> n </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER k> k </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+				<FORMAL_PARAM>
+					<IDENTIFIER bit> bit </IDENTIFIER>
+					<TYPE bool> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE int> </TYPE>
+			<BLOCK>
+				<IF_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER bit> bit </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<BLOCK>
+						<RETURN_STMT>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER n> n </IDENTIFIER>
+										</FACTOR>
+									</TERM>
+									<ADDOP or> or </ADDOP>
+									<TERM>
+										<FACTOR>
+											<FUNC_CALL>
+												<IDENTIFIER SHL> SHL </IDENTIFIER>
+												<ACTUAL_PARAMS>
 													<EXPR>
 														<SIMPLE_EXPR>
 															<TERM>
@@ -28,16 +708,663 @@
 															</TERM>
 														</SIMPLE_EXPR>
 													</EXPR>
-												</UNOP>
-											</FACTOR>
-										</TERM>
-									</SIMPLE_EXPR>
-								</EXPR>
-							</UNOP>
+													<EXPR>
+														<SIMPLE_EXPR>
+															<TERM>
+																<FACTOR>
+																	<IDENTIFIER k> k </IDENTIFIER>
+																</FACTOR>
+															</TERM>
+														</SIMPLE_EXPR>
+													</EXPR>
+												</ACTUAL_PARAMS>
+											</FUNC_CALL>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</RETURN_STMT>
+					</BLOCK>
+					<BLOCK>
+						<RETURN_STMT>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER n> n </IDENTIFIER>
+										</FACTOR>
+										<MULOP and> and </MULOP>
+										<FACTOR>
+											<SUB_EXPR>
+												<EXPR>
+													<SIMPLE_EXPR>
+														<TERM>
+															<FACTOR>
+																<UNOP not>
+																	<FACTOR>
+																		<FUNC_CALL>
+																			<IDENTIFIER SHL> SHL </IDENTIFIER>
+																			<ACTUAL_PARAMS>
+																				<EXPR>
+																					<SIMPLE_EXPR>
+																						<TERM>
+																							<FACTOR>
+																								<INT_LIT 1> </INT_LIT>
+																							</FACTOR>
+																						</TERM>
+																					</SIMPLE_EXPR>
+																				</EXPR>
+																				<EXPR>
+																					<SIMPLE_EXPR>
+																						<TERM>
+																							<FACTOR>
+																								<IDENTIFIER k> k </IDENTIFIER>
+																							</FACTOR>
+																						</TERM>
+																					</SIMPLE_EXPR>
+																				</EXPR>
+																			</ACTUAL_PARAMS>
+																		</FUNC_CALL>
+																	</FACTOR>
+																</UNOP>
+															</FACTOR>
+														</TERM>
+													</SIMPLE_EXPR>
+												</EXPR>
+											</SUB_EXPR>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</RETURN_STMT>
+					</BLOCK>
+				</IF_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<FUNC_DECL printBoard>
+			<IDENTIFIER printBoard> printBoard </IDENTIFIER>
+			<FORMAL_PARAMS>
+				<FORMAL_PARAM>
+					<IDENTIFIER n> n </IDENTIFIER>
+					<TYPE int> </TYPE>
+				</FORMAL_PARAM>
+			</FORMAL_PARAMS>
+			<TYPE bool> </TYPE>
+			<BLOCK>
+				<FOR_STMT>
+					<VAR_DECL i>
+						<IDENTIFIER i> i </IDENTIFIER>
+						<TYPE int> </TYPE>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 1> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</VAR_DECL>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER i> i </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP <=> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 2147483648> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<ASSIGN>
+						<IDENTIFIER i> i </IDENTIFIER>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<IDENTIFIER i> i </IDENTIFIER>
+									</FACTOR>
+									<MULOP *> * </MULOP>
+									<FACTOR>
+										<INT_LIT 2> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</ASSIGN>
+					<BLOCK>
+						<IF_STMT>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<SUB_EXPR>
+												<EXPR>
+													<SIMPLE_EXPR>
+														<TERM>
+															<FACTOR>
+																<IDENTIFIER n> n </IDENTIFIER>
+															</FACTOR>
+															<MULOP and> and </MULOP>
+															<FACTOR>
+																<IDENTIFIER i> i </IDENTIFIER>
+															</FACTOR>
+														</TERM>
+													</SIMPLE_EXPR>
+												</EXPR>
+											</SUB_EXPR>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+								<RELOP ==> </RELOP>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<IDENTIFIER i> i </IDENTIFIER>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+							<BLOCK>
+								<PRINT_STMT>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<CHAR_LIT '#'> </CHAR_LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</PRINT_STMT>
+							</BLOCK>
+							<BLOCK>
+								<PRINT_STMT>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<CHAR_LIT ' '> </CHAR_LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</PRINT_STMT>
+							</BLOCK>
+						</IF_STMT>
+					</BLOCK>
+				</FOR_STMT>
+				<RETURN_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<BOOL_LIT true> </BOOL_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</RETURN_STMT>
+			</BLOCK>
+		</FUNC_DECL>
+		<VAR_DECL _0>
+			<IDENTIFIER _0> _0 </IDENTIFIER>
+			<TYPE bool> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<INT_LIT 0> </INT_LIT>
 						</FACTOR>
 					</TERM>
 				</SIMPLE_EXPR>
 			</EXPR>
-		</PRINT_STMT>
+		</VAR_DECL>
+		<VAR_DECL BOARD_CAP>
+			<IDENTIFIER BOARD_CAP> BOARD_CAP </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<INT_LIT 25> </INT_LIT>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<VAR_DECL board>
+			<IDENTIFIER board> board </IDENTIFIER>
+			<TYPE int> </TYPE>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<FUNC_CALL>
+								<IDENTIFIER SHL> SHL </IDENTIFIER>
+								<ACTUAL_PARAMS>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<INT_LIT 1> </INT_LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+									<EXPR>
+										<SIMPLE_EXPR>
+											<TERM>
+												<FACTOR>
+													<INT_LIT 24> </INT_LIT>
+												</FACTOR>
+											</TERM>
+										</SIMPLE_EXPR>
+									</EXPR>
+								</ACTUAL_PARAMS>
+							</FUNC_CALL>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+		</VAR_DECL>
+		<FOR_STMT>
+			<VAR_DECL i>
+				<IDENTIFIER i> i </IDENTIFIER>
+				<TYPE int> </TYPE>
+				<EXPR>
+					<SIMPLE_EXPR>
+						<TERM>
+							<FACTOR>
+								<INT_LIT 0> </INT_LIT>
+							</FACTOR>
+						</TERM>
+					</SIMPLE_EXPR>
+				</EXPR>
+			</VAR_DECL>
+			<EXPR>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<IDENTIFIER i> i </IDENTIFIER>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+				<RELOP <> </RELOP>
+				<SIMPLE_EXPR>
+					<TERM>
+						<FACTOR>
+							<IDENTIFIER BOARD_CAP> BOARD_CAP </IDENTIFIER>
+						</FACTOR>
+					</TERM>
+				</SIMPLE_EXPR>
+			</EXPR>
+			<ASSIGN>
+				<IDENTIFIER i> i </IDENTIFIER>
+				<EXPR>
+					<SIMPLE_EXPR>
+						<TERM>
+							<FACTOR>
+								<IDENTIFIER i> i </IDENTIFIER>
+							</FACTOR>
+						</TERM>
+						<ADDOP +> + </ADDOP>
+						<TERM>
+							<FACTOR>
+								<INT_LIT 1> </INT_LIT>
+							</FACTOR>
+						</TERM>
+					</SIMPLE_EXPR>
+				</EXPR>
+			</ASSIGN>
+			<BLOCK>
+				<ASSIGN>
+					<IDENTIFIER _0> _0 </IDENTIFIER>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<FUNC_CALL>
+										<IDENTIFIER printBoard> printBoard </IDENTIFIER>
+										<ACTUAL_PARAMS>
+											<EXPR>
+												<SIMPLE_EXPR>
+													<TERM>
+														<FACTOR>
+															<IDENTIFIER board> board </IDENTIFIER>
+														</FACTOR>
+													</TERM>
+												</SIMPLE_EXPR>
+											</EXPR>
+										</ACTUAL_PARAMS>
+									</FUNC_CALL>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</ASSIGN>
+				<PRINT_STMT>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<CHAR_LIT ' '> </CHAR_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</PRINT_STMT>
+				<VAR_DECL pattern>
+					<IDENTIFIER pattern> pattern </IDENTIFIER>
+					<TYPE int> </TYPE>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<FUNC_CALL>
+										<IDENTIFIER SHL> SHL </IDENTIFIER>
+										<ACTUAL_PARAMS>
+											<EXPR>
+												<SIMPLE_EXPR>
+													<TERM>
+														<FACTOR>
+															<FUNC_CALL>
+																<IDENTIFIER getBit> getBit </IDENTIFIER>
+																<ACTUAL_PARAMS>
+																	<EXPR>
+																		<SIMPLE_EXPR>
+																			<TERM>
+																				<FACTOR>
+																					<IDENTIFIER board> board </IDENTIFIER>
+																				</FACTOR>
+																			</TERM>
+																		</SIMPLE_EXPR>
+																	</EXPR>
+																	<EXPR>
+																		<SIMPLE_EXPR>
+																			<TERM>
+																				<FACTOR>
+																					<INT_LIT 0> </INT_LIT>
+																				</FACTOR>
+																			</TERM>
+																		</SIMPLE_EXPR>
+																	</EXPR>
+																</ACTUAL_PARAMS>
+															</FUNC_CALL>
+														</FACTOR>
+													</TERM>
+												</SIMPLE_EXPR>
+											</EXPR>
+											<EXPR>
+												<SIMPLE_EXPR>
+													<TERM>
+														<FACTOR>
+															<INT_LIT 1> </INT_LIT>
+														</FACTOR>
+													</TERM>
+												</SIMPLE_EXPR>
+											</EXPR>
+										</ACTUAL_PARAMS>
+									</FUNC_CALL>
+								</FACTOR>
+							</TERM>
+							<ADDOP or> or </ADDOP>
+							<TERM>
+								<FACTOR>
+									<FUNC_CALL>
+										<IDENTIFIER getBit> getBit </IDENTIFIER>
+										<ACTUAL_PARAMS>
+											<EXPR>
+												<SIMPLE_EXPR>
+													<TERM>
+														<FACTOR>
+															<IDENTIFIER board> board </IDENTIFIER>
+														</FACTOR>
+													</TERM>
+												</SIMPLE_EXPR>
+											</EXPR>
+											<EXPR>
+												<SIMPLE_EXPR>
+													<TERM>
+														<FACTOR>
+															<INT_LIT 1> </INT_LIT>
+														</FACTOR>
+													</TERM>
+												</SIMPLE_EXPR>
+											</EXPR>
+										</ACTUAL_PARAMS>
+									</FUNC_CALL>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+				</VAR_DECL>
+				<FOR_STMT>
+					<VAR_DECL j>
+						<IDENTIFIER j> j </IDENTIFIER>
+						<TYPE int> </TYPE>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 1> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</VAR_DECL>
+					<EXPR>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER j> j </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+						<RELOP <> </RELOP>
+						<SIMPLE_EXPR>
+							<TERM>
+								<FACTOR>
+									<IDENTIFIER BOARD_CAP> BOARD_CAP </IDENTIFIER>
+								</FACTOR>
+							</TERM>
+							<ADDOP -> - </ADDOP>
+							<TERM>
+								<FACTOR>
+									<INT_LIT 1> </INT_LIT>
+								</FACTOR>
+							</TERM>
+						</SIMPLE_EXPR>
+					</EXPR>
+					<ASSIGN>
+						<IDENTIFIER j> j </IDENTIFIER>
+						<EXPR>
+							<SIMPLE_EXPR>
+								<TERM>
+									<FACTOR>
+										<IDENTIFIER j> j </IDENTIFIER>
+									</FACTOR>
+								</TERM>
+								<ADDOP +> + </ADDOP>
+								<TERM>
+									<FACTOR>
+										<INT_LIT 1> </INT_LIT>
+									</FACTOR>
+								</TERM>
+							</SIMPLE_EXPR>
+						</EXPR>
+					</ASSIGN>
+					<BLOCK>
+						<ASSIGN>
+							<IDENTIFIER pattern> pattern </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<SUB_EXPR>
+												<EXPR>
+													<SIMPLE_EXPR>
+														<TERM>
+															<FACTOR>
+																<FUNC_CALL>
+																	<IDENTIFIER SHL> SHL </IDENTIFIER>
+																	<ACTUAL_PARAMS>
+																		<EXPR>
+																			<SIMPLE_EXPR>
+																				<TERM>
+																					<FACTOR>
+																						<IDENTIFIER pattern> pattern </IDENTIFIER>
+																					</FACTOR>
+																				</TERM>
+																			</SIMPLE_EXPR>
+																		</EXPR>
+																		<EXPR>
+																			<SIMPLE_EXPR>
+																				<TERM>
+																					<FACTOR>
+																						<INT_LIT 1> </INT_LIT>
+																					</FACTOR>
+																				</TERM>
+																			</SIMPLE_EXPR>
+																		</EXPR>
+																	</ACTUAL_PARAMS>
+																</FUNC_CALL>
+															</FACTOR>
+															<MULOP and> and </MULOP>
+															<FACTOR>
+																<INT_LIT 7> </INT_LIT>
+															</FACTOR>
+														</TERM>
+													</SIMPLE_EXPR>
+												</EXPR>
+											</SUB_EXPR>
+										</FACTOR>
+									</TERM>
+									<ADDOP or> or </ADDOP>
+									<TERM>
+										<FACTOR>
+											<SUB_EXPR>
+												<EXPR>
+													<SIMPLE_EXPR>
+														<TERM>
+															<FACTOR>
+																<FUNC_CALL>
+																	<IDENTIFIER getBit> getBit </IDENTIFIER>
+																	<ACTUAL_PARAMS>
+																		<EXPR>
+																			<SIMPLE_EXPR>
+																				<TERM>
+																					<FACTOR>
+																						<IDENTIFIER board> board </IDENTIFIER>
+																					</FACTOR>
+																				</TERM>
+																			</SIMPLE_EXPR>
+																		</EXPR>
+																		<EXPR>
+																			<SIMPLE_EXPR>
+																				<TERM>
+																					<FACTOR>
+																						<IDENTIFIER j> j </IDENTIFIER>
+																					</FACTOR>
+																				</TERM>
+																				<ADDOP +> + </ADDOP>
+																				<TERM>
+																					<FACTOR>
+																						<INT_LIT 1> </INT_LIT>
+																					</FACTOR>
+																				</TERM>
+																			</SIMPLE_EXPR>
+																		</EXPR>
+																	</ACTUAL_PARAMS>
+																</FUNC_CALL>
+															</FACTOR>
+														</TERM>
+													</SIMPLE_EXPR>
+												</EXPR>
+											</SUB_EXPR>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+						<ASSIGN>
+							<IDENTIFIER board> board </IDENTIFIER>
+							<EXPR>
+								<SIMPLE_EXPR>
+									<TERM>
+										<FACTOR>
+											<FUNC_CALL>
+												<IDENTIFIER setBit> setBit </IDENTIFIER>
+												<ACTUAL_PARAMS>
+													<EXPR>
+														<SIMPLE_EXPR>
+															<TERM>
+																<FACTOR>
+																	<IDENTIFIER board> board </IDENTIFIER>
+																</FACTOR>
+															</TERM>
+														</SIMPLE_EXPR>
+													</EXPR>
+													<EXPR>
+														<SIMPLE_EXPR>
+															<TERM>
+																<FACTOR>
+																	<IDENTIFIER j> j </IDENTIFIER>
+																</FACTOR>
+															</TERM>
+														</SIMPLE_EXPR>
+													</EXPR>
+													<EXPR>
+														<SIMPLE_EXPR>
+															<TERM>
+																<FACTOR>
+																	<FUNC_CALL>
+																		<IDENTIFIER SHR> SHR </IDENTIFIER>
+																		<ACTUAL_PARAMS>
+																			<EXPR>
+																				<SIMPLE_EXPR>
+																					<TERM>
+																						<FACTOR>
+																							<INT_LIT 110> </INT_LIT>
+																						</FACTOR>
+																					</TERM>
+																				</SIMPLE_EXPR>
+																			</EXPR>
+																			<EXPR>
+																				<SIMPLE_EXPR>
+																					<TERM>
+																						<FACTOR>
+																							<IDENTIFIER pattern> pattern </IDENTIFIER>
+																						</FACTOR>
+																					</TERM>
+																				</SIMPLE_EXPR>
+																			</EXPR>
+																		</ACTUAL_PARAMS>
+																	</FUNC_CALL>
+																</FACTOR>
+																<MULOP and> and </MULOP>
+																<FACTOR>
+																	<INT_LIT 1> </INT_LIT>
+																</FACTOR>
+															</TERM>
+														</SIMPLE_EXPR>
+													</EXPR>
+												</ACTUAL_PARAMS>
+											</FUNC_CALL>
+										</FACTOR>
+									</TERM>
+								</SIMPLE_EXPR>
+							</EXPR>
+						</ASSIGN>
+					</BLOCK>
+				</FOR_STMT>
+			</BLOCK>
+		</FOR_STMT>
 	</BLOCK>
 </PROGRAM>

@@ -175,10 +175,10 @@ bool SemanticVisitor::analyseFuncDecl(shared_ptr<ASTNode> root_node) {
 }
 bool SemanticVisitor::visitFuncDecl(shared_ptr<ASTNode> node) {
    
+   
     if (node->type == AST_FUNC_DECL){
         auto identifier_node = node->children[0];
         scopeStk.errToken = identifier_node->token;
-        
 
         shared_ptr<ASTNode> return_node, block_node, params_node;
         params_node = nullptr;
@@ -214,8 +214,30 @@ bool SemanticVisitor::visitFuncDecl(shared_ptr<ASTNode> node) {
             return false;
         }
         
+        //Add variables passed to function in scope.
+        if (params_node) {
+            for (auto c : params_node->children) {
+                scopeStk.addSymbol(c->children[0]->attr, getIdentifierType(c->children[1]->attr), {0,ID_EMPTY}, {});
+            }
+        }
+
+        //Check Block
+        if (!visit(block_node)) {
+            return false;
+        }
+
         // Add function to map of function declarations
         scopeStk.addFunction(identifier_node->attr, getIdentifierType(return_node->attr), node->token, params_node, {});   
+    }
+
+    else if (node->type == AST_PROGRAM) {
+        auto block_node = node->children[0];
+
+        for (auto c : block_node->children) {
+            if (c->type == AST_VAR_DECL) {
+                visit(c); //Add all global variables to scope.
+            }
+        }
     }
         
     for (auto c : node->children) {
@@ -304,9 +326,6 @@ bool SemanticVisitor::visit(shared_ptr<ASTNode> node, int depth) {
 
                 return false;
             }
-
-
-
 
             //If variable declaration is valid, add variable to symbol table
             scopeStk.addSymbol(identifier_node->attr, getIdentifierType(type_node->attr),{},identifier_node->token);
@@ -691,9 +710,9 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                 auto relop = node->children[i];
                 auto u     = evaluate(node->children[i+1]);
 
-                cout << v.data << ' ' << u.data << '\n';
-
                 //Evaluate relation operation.
+                // cout << v.data << ' ' << u.data << '\n';
+
                 if (relop->attr[0] == '>')
                     if (relop->attr.size() != 1) v.data = v.data >= u.data;
                     else                         v.data = v.data > u.data;
@@ -701,7 +720,7 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
                     if (relop->attr.size() != 1) v.data = v.data <= u.data;
                     else                         v.data = v.data < u.data;
                 else if (relop->attr[0] == '!')  v.data = v.data != u.data;
-                     else                        v.data = v.data == u.data;
+                    else                         v.data = v.data == u.data;
 
                 //Return type is strictly bool after relational operator.
                 v.type = ID_BOOL;
@@ -852,11 +871,7 @@ value InterpreterVisitor::evaluate(shared_ptr<ASTNode> node) {
             }
         
         } break;
-        
-
     }
 
     return {};
-
-
 }

@@ -30,12 +30,12 @@ int main(int argc, char* argv[]) {
     string text;
     text = file_to_string(filename);
 
-    print_program(text);
+    // print_program(text);
 
     vector<Token> tokens = lexer.getTokens(text);
 
-    lexer.printToken(tokens);
-    cout << '\n';
+    // lexer.printToken(tokens);
+    // cout << '\n';
 
     shared_ptr<ASTNode> rootNode;
     Parser parser(tokens);

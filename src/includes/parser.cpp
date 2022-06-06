@@ -539,11 +539,14 @@ bool Parser::parseUnOp(shared_ptr<ASTNode> node) {
     Token tok = consNextToken();
     auto new_node = make_shared<ASTNode>(AST_UNOP);
 
+    //Goes against EBNF rules, but the EBNF rules were incorrect to begin with.
+    //The EBNF state that parseFactor() should be parseExpr(). However doing this
+    //evaluates the expression -1 == -1. to false, as it is read as -(1 == -1)
     bool expr = ((tok.type == (expTyp=TOK_ADDOP) && tok.lexeme == "-") ||
                  (tok.type == (expTyp=TOK_UNOP)                     )) &&
-                 (parseExpr(new_node)                                );
+                 (parseFactor(new_node)                              );
 
-    //ATTACHING WHOLE EXPRESSION TO UNOP?? SHOULD ONLY ATTACH IMMEDIATE TOKEN
+
 
     new_node->attr = tok.lexeme;
     new_node->token = tok;
